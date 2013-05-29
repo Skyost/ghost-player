@@ -1,215 +1,197 @@
 package com.skyost.gp;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
  
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
  
 public class GhostFactory {
-    private static final String MC_VERSION;
+	/**
+     * Team of ghosts and people who can see ghosts.
+     */
+    private static final String GHOST_TEAM_NAME = "Ghosts";
+    private static final long UPDATE_DELAY = 20L;
  
-    static {
-        String version = "";
-        if(!checkVersion(version)) {
-            StringBuilder builder = new StringBuilder();
-            for(int a = 0; a < 10; a++) {
-                for(int b = 0; b < 10; b++) {
-                    for(int c = 0; c < 10; c++) {
-                        builder.setLength(0);
-                        builder.append('v').append(a).append('_').append(b).append("_R").append(c).append('.');
-                        version = builder.toString();
-                        if(checkVersion(version))
-                            a = b = c = 10;
+    // No players in the ghost factory
+    private static final OfflinePlayer[] EMPTY_PLAYERS = new OfflinePlayer[0];
+    private Team ghostTeam;
+ 
+    // Task that must be cleaned up
+    private BukkitTask task;
+    private boolean closed;
+ 
+    // Players that are actually ghosts
+    private Set<String> ghosts = new HashSet<String>();
+ 
+    public GhostFactory(Plugin plugin) {
+        // Initialize
+        createTask(plugin);
+        createGetTeam();
+    }
+ 
+    private void createGetTeam() {
+        Scoreboard board = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
+ 
+        ghostTeam = board.getTeam(GHOST_TEAM_NAME);
+ 
+        // Create a new ghost team if needed
+        if (ghostTeam == null) {
+            ghostTeam = board.registerNewTeam(GHOST_TEAM_NAME);
+            ghostTeam.setCanSeeFriendlyInvisibles(true);
+        }
+ 
+ 
+    }
+ 
+    private void createTask(Plugin plugin) {
+        task = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+            @Override
+            public void run() {
+                for (OfflinePlayer member : getMembers()) {
+                    Player player = member.getPlayer();
+ 
+                    if (player != null) {
+                        // Update invisibility effect
+                        setGhost(player, isGhost(player));
+                    } else {
+                        ghosts.remove(member.getName());
+                        ghostTeam.removePlayer(member);
                     }
                 }
             }
-        }
-        MC_VERSION = version;
+        }, UPDATE_DELAY, UPDATE_DELAY);
     }
  
-    private static final String NMS_ROOT = "net.minecraft.server." + MC_VERSION;
- 
-    private static boolean checkVersion(String version) {
-        try {
-            Class.forName("net.minecraft.server." + version + "World");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
- 
-    private List<String> players = new ArrayList<String>();
-    private boolean created = false;
- 
-    public GhostFactory(Plugin plugin) {
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new GhostListener(this), plugin);
-        Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-            @Override
-            public void run() {
-                for(String user : players) {
-                    Player player = Bukkit.getPlayer(user);
-                    if(!player.hasPotionEffect(PotionEffectType.INVISIBILITY))
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
-                }
+    /**
+     * Remove all existing player members and ghosts.
+     */
+    public void clearMembers() {
+        if (ghostTeam != null) {
+            for (OfflinePlayer player : getMembers()) {
+                ghostTeam.removePlayer(player);
             }
-        }, 5L, 5L);
+        }
     }
  
-    public void create() {
-        if(created)
-            return;
- 
-        this.update(0);
-        this.created = true;
-    }
- 
-    public void remove() {
-        if(!created)
-            return;
- 
-        this.update(1);
-        this.created = false;
-    }
- 
-    public boolean isCreated() {
-        return this.created;
-    }
- 
-    public void addGhost(Player player) {
-        if(players.add(player.getName())) {
+    /**
+     * Add the given player to this ghost manager. This ensures that it can see ghosts, and later become one.
+     * @param player - the player to add to the ghost manager.
+     */
+    public void addPlayer(Player player) {
+        validateState();
+        if (!ghostTeam.hasPlayer(player)) {
+            ghostTeam.addPlayer(player);
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
-            this.update(3);
         }
     }
  
-    public void removeGhost(Player player) {
-        if(players.remove(player.getName())) {
+    /**
+     * Determine if the given player is tracked by this ghost manager and is a ghost.
+     * @param player - the player to test.
+     * @return TRUE if it is, FALSE otherwise.
+     */
+    public boolean isGhost(Player player) {
+        return player != null && hasPlayer(player) && ghosts.contains(player.getName());
+    }
+ 
+    /**
+     * Determine if the current player is tracked by this ghost manager, or is a ghost.
+     * @param player - the player to check.
+     * @return TRUE if it is, FALSE otherwise.
+     */
+    public boolean hasPlayer(Player player) {
+        validateState();
+        return ghostTeam.hasPlayer(player);
+    }
+ 
+    /**
+     * Set wheter or not a given player is a ghost.
+     * @param player - the player to set as a ghost.
+     * @param isGhost - TRUE to make the given player into a ghost, FALSE otherwise.
+     */
+    public void setGhost(Player player, boolean isGhost) {
+        // Make sure the player is tracked by this manager
+        if (!hasPlayer(player))
+            addPlayer(player);
+ 
+        if (isGhost) {
+            ghosts.add(player.getName());
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
+        } else if (!isGhost) {
+            ghosts.remove(player.getName());
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
-            this.update(4);
         }
     }
  
-    public String[] getGhosts() {
-        return players.toArray(new String[0]);
-    }
- 
-    public void clearGhosts() {
-        players.clear();
-    }
- 
-    private void update(int action) {
-        Object packet = this.createPacket("Packet209SetScoreboardTeam");
-        this.setValue(packet, "a", "ghosts");
-        this.setValue(packet, "f", action);
-        this.setValue(packet, "b", "Ghosts");
-        this.setValue(packet, "c", "");
-        this.setValue(packet, "d", "");
-        this.setValue(packet, "g", 2);
-        this.setValue(packet, "e", players);
- 
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            this.sendPacket(player, packet);
+    /**
+     * Remove the given player from the manager, turning it back into the living and making it unable to see ghosts.
+     * @param player - the player to remove from the ghost manager.
+     */
+    public void removePlayer(Player player) {
+        validateState();
+        if (ghostTeam.removePlayer(player)) {
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
         }
     }
  
-    private void sendTo(Player player) {
-        Object packet = this.createPacket("Packet209SetScoreboardTeam");
-        this.setValue(packet, "a", "ghosts");
-        this.setValue(packet, "f", 0);
-        this.setValue(packet, "b", "Ghosts");
-        this.setValue(packet, "c", "");
-        this.setValue(packet, "d", "");
-        this.setValue(packet, "g", 2);
-        this.setValue(packet, "e", players);
-        this.sendPacket(player, packet);
-    }
+    /**
+     * Retrieve every ghost currently tracked by this manager.
+     * @return Every tracked ghost.
+     */
+    public OfflinePlayer[] getGhosts() {
+        validateState();
+        Set<OfflinePlayer> players = new HashSet<OfflinePlayer>(ghostTeam.getPlayers());
  
-    private void setValue(Object instance, String fieldName, Object value) {
-        try {
-            Field field = instance.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(instance, value);
-        } catch(Exception e) {
-            e.printStackTrace();
+        // Remove all non-ghost players
+        for (Iterator<OfflinePlayer> it = players.iterator(); it.hasNext(); ) {
+            if (!ghosts.contains(it.next().getName())) {
+                it.remove();
+            }
         }
+        return toArray(players);
     }
  
-    private Object getValue(Object instance, String fieldName) {
-        try {
-            Field field = instance.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(instance);
-        } catch(Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    /**
+     * Retrieve every ghost and every player that can see ghosts.
+     * @return Every ghost or every observer.
+     */
+    public OfflinePlayer[] getMembers() {
+        validateState();
+        return toArray(ghostTeam.getPlayers());
     }
  
-    private Object invoke(Object instance, String methodName, Class<?>[] fields, Object[] values) {
-        try {
-            Method method = instance.getClass().getDeclaredMethod(methodName, fields);
-            method.setAccessible(true);
-            return method.invoke(instance, values);
-        } catch(Exception e) {
-            e.printStackTrace();
-            return null;
+    private OfflinePlayer[] toArray(Set<OfflinePlayer> players) {
+        if (players != null) {
+            return players.toArray(new OfflinePlayer[0]);
+        } else {
+            return EMPTY_PLAYERS;
         }
     }
  
-    private Object createPacket(String name) {
-        try {
-            Class<?> clazz = Class.forName(NMS_ROOT + name);
-            return clazz.newInstance();
-        } catch(Exception e) {
-            e.printStackTrace();
-            return null;
+    public void close() {
+        if (!closed) {
+            task.cancel();
+            ghostTeam.unregister();
+            closed = true;
         }
     }
  
-    private void sendPacket(Player player, Object packet) {
-        try {
-            Class<?> Packet = Class.forName(NMS_ROOT + "Packet");
-            Object playerHandle = this.invoke(player, "getHandle", new Class<?>[0], new Class<?>[0]);
-            Object playerConnection = this.getValue(playerHandle, "playerConnection");
-            this.invoke(playerConnection, "sendPacket", new Class<?>[] {Packet}, new Object[] {packet});
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+    public boolean isClosed() {
+        return closed;
     }
  
-    private static final class GhostListener implements Listener {
-        private GhostFactory factory;
- 
-        public GhostListener(GhostFactory factory) {
-            this.factory = factory;
-        }
- 
-        @SuppressWarnings("unused")
-		@EventHandler(priority = EventPriority.MONITOR)
-        public void onPlayerQuit(PlayerQuitEvent event) {
-            Player player = event.getPlayer();
-            factory.removeGhost(player);
-        }
- 
-        @SuppressWarnings("unused")
-		@EventHandler(priority = EventPriority.LOWEST)
-        public void onPlayerJoin(PlayerJoinEvent event) {
-            Player player = event.getPlayer();
-            if(factory.isCreated())
-                factory.sendTo(player);
+    private void validateState() {
+        if (closed) {
+            throw new IllegalStateException("Ghost factory has closed. Cannot reuse instances.");
         }
     }
 }

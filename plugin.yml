@@ -1,14 +1,17 @@
 name: Ghost Player
 main: com.skyost.gp.GhostPlayerPlugin
 description: Make you like a ghost !
-version: 0.1
+version: 0.2
 author: Skyost
 website: http://www.imc-bans.eu/
 commands:
  ghost:
   aliases: g
   description: /ghost
- clearsghost:
+ removeghost:
+  aliases: rg
+  description: /removeghost <player>
+ clearsghosts:
   aliases: cg
   description: /clearsghosts
  human:
@@ -21,6 +24,9 @@ permisions:
  ghostplayer.player.behuman:
   default: true
   description: Allow you to be an human !
+ ghostplayer.admin.removeghost:
+  default: op
+  description: Allow you to remove a player from the ghosts !
  ghostplayer.admin.clearsghosts:
   default: op
   description: Allow you to clears all ghosts !
