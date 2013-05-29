@@ -36,7 +36,6 @@ public class GhostFactory {
                 }
             }
         }
- 
         MC_VERSION = version;
     }
  

@@ -67,7 +67,6 @@ public class GhostPlayerPlugin extends JavaPlugin {
 	        		sender.sendMessage(ChatColor.RED + "[GhostPlayer] You can't do this from the console !");
 	        	}
 	        }
-	        
 	        return false;
 	    }
 
