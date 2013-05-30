@@ -1,7 +1,7 @@
 name: Ghost Player
 main: com.skyost.gp.GhostPlayerPlugin
 description: Make you like a ghost !
-version: 0.2
+version: 0.2.1
 author: Skyost
 website: http://www.imc-bans.eu/
 commands:

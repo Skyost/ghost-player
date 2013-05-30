@@ -100,9 +100,14 @@ public class GhostPlayerPlugin extends JavaPlugin {
 	        if(cmd.getName().equalsIgnoreCase("ghost")) {
 	        	if (sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.beghost")) {
-                        	ghostFactory.setGhost(player, true);
-                        	ghostFactory.addPlayer(player);
-                        	sender.sendMessage("You are a ghost now !");
+                        	if(ghostFactory.isGhost(player) == true) {
+                        		sender.sendMessage(ChatColor.RED + "You are already a ghost !");
+                        	}
+                        	else {
+                        		ghostFactory.setGhost(player, true);
+                            	ghostFactory.addPlayer(player);
+                            	sender.sendMessage("You are a ghost now !");
+                        	}
                         }
                         else {
                         	sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
@@ -117,9 +122,14 @@ public class GhostPlayerPlugin extends JavaPlugin {
 	        	if (sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.admin.removeghost")) {
                         	try {
+                        		if(ghostFactory.isGhost(player) == true) {
                         			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
                         			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
                         			sender.sendMessage(Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
+                        		}
+                        		else {
+                        			sender.sendMessage(ChatColor.RED + Bukkit.getPlayer(args[0]).getName() + " is already an human !");
+                        		}
                         	}
         	        		catch(NullPointerException e) {
         	        			sender.sendMessage(ChatColor.RED + Bukkit.getPlayer(args[0]).getName() + " does not exist !");
@@ -131,9 +141,14 @@ public class GhostPlayerPlugin extends JavaPlugin {
 	        	}
 	        	else {
 	        		try {
-                    	ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
-	        			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
-	        			sender.sendMessage("[GhostPlayer] " + Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
+	        			if(ghostFactory.isGhost(player) == true) {
+	        				ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
+	        				ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
+	        				sender.sendMessage("[GhostPlayer] " + Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
+	        			}
+	        			else {
+	        				sender.sendMessage(ChatColor.RED + "[GhostPlayer] " + Bukkit.getPlayer(args[0]).getName() + " is already an human !");
+	        			}
 	        		}
 	        		catch(NullPointerException e) {
 	        			sender.sendMessage(ChatColor.RED + "[GhostPlayer] " + Bukkit.getPlayer(args[0]).getName() + " does not exist !");
@@ -144,9 +159,14 @@ public class GhostPlayerPlugin extends JavaPlugin {
 	        if(cmd.getName().equalsIgnoreCase("human")) {
 	        	if (sender instanceof Player) {
 	        		if(player.hasPermission("ghostplayer.player.behuman")) {
-	        			ghostFactory.setGhost(player, false);
-	        			ghostFactory.removePlayer(player);
-	        			sender.sendMessage("You are an human now !");
+	        			if(ghostFactory.isGhost(player) == true) {
+	        				ghostFactory.setGhost(player, false);
+	        				ghostFactory.removePlayer(player);
+	        				sender.sendMessage("You are an human now !");
+	        			}
+	        			else {
+	        				sender.sendMessage(ChatColor.RED + "You are already an human !");
+	        			}
 	        		}
 	        		else {
 	        			sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
