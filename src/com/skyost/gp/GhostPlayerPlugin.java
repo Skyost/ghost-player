@@ -59,8 +59,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	public void startMetrics() {
 		try {
 		    Metrics metrics = new Metrics(this);
-		    metrics.start();
-		    Graph ghostsGraph = metrics.createGraph("Default");
+		    Graph ghostsGraph = metrics.createGraph("Ghosts");
 		    ghostsGraph.addPlotter(new Metrics.Plotter("Total ghosts") {
 		    @Override
 		    public int getValue() {
@@ -68,7 +67,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 		       }
 		    });
 		    
-    		Graph updateGraph = metrics.createGraph("updateGraph");
+    		Graph updateGraph = metrics.createGraph("Update Graph");
     		updateGraph.addPlotter(new Metrics.Plotter("Checking for Updates") {	
     			@Override
     			public int getValue() {	
@@ -84,6 +83,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
     				}
     			}
     		});
+		    metrics.start();
 		} catch (IOException ex) {
 			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
 		}
@@ -204,7 +204,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        	if (sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.admin.removeghost")) {
                         	try {
-                        		if(ghostFactory.isGhost(player) == true) {
+                        		if(ghostFactory.isGhost(Bukkit.getPlayer(args[0])) == true) {
                         			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
                         			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
                         			sender.sendMessage(Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
@@ -223,7 +223,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        	}
 	        	else {
 	        		try {
-	        			if(ghostFactory.isGhost(player) == true) {
+	        			if(ghostFactory.isGhost(Bukkit.getPlayer(args[0])) == true) {
                 			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
                 			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
 	        				sender.sendMessage("[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
