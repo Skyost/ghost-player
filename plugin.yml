@@ -1,13 +1,19 @@
 name: Ghost Player
 main: com.skyost.gp.GhostPlayerPlugin
-description: Make you like a ghost !
-version: 0.2.1
+description: Be ghooooooooost !
+version: 0.3
 author: Skyost
 website: http://www.imc-bans.eu/
 commands:
+ ghostview:
+  aliases: gv
+  description: /ghostview
  ghost:
   aliases: g
   description: /ghost
+ silentghost:
+  aliases: sg
+  description: /silentghost
  removeghost:
   aliases: rg
   description: /removeghost <player>
@@ -17,7 +23,13 @@ commands:
  human:
   aliases: h
   description: /human
+ silenthuman:
+  aliases: sh
+  description: /silenthuman
 permisions:
+ ghostplayer.player.ghostview:
+  default: true
+  description: Allow you to view a block like a ghost !
  ghostplayer.player.beghost:
   default: true
   description: Allow you to be a ghost !
