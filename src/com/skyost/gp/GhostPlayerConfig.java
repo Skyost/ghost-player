@@ -10,4 +10,5 @@ public class GhostPlayerConfig extends Config {
 		CONFIG_HEADER = "Ghost Player Configuration";
 	}
 	public boolean AutoUpdateOnLoad = true;
+	public boolean TurnIntoGhostOnDeath = false;
 }

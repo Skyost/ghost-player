@@ -9,9 +9,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +24,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	public GhostFactory ghostFactory;
 	public GhostPlayerConfig config;
 	public static boolean autoUpdate;
+	public static boolean ghostOnDeath;
 	public int totalGhosts;
 	
 	public void onEnable() {
@@ -30,6 +33,17 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 		loadConfig();
 		update();
 		startMetrics();
+	}
+	
+	public void onDisable() {
+		try {
+			config.save();
+			getServer().getPluginManager().disablePlugin(this);
+		} 
+		catch (InvalidConfigurationException ex) {
+			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
+			getServer().getPluginManager().disablePlugin(this);
+		}
 	}
 	
     @EventHandler
@@ -41,6 +55,26 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
     		doNothing();
     	}
     }
+    
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+    	if(ghostOnDeath == true) {
+    		if(ghostFactory.isGhost(event.getEntity()) == true) {
+    			ghostFactory.setGhost(event.getEntity(), true);
+    		}
+    		else {
+    			ghostFactory.setGhost(event.getEntity(), true);
+    		}
+    	}
+    	else {
+    		if(ghostFactory.isGhost(event.getEntity()) == true) {
+    			ghostFactory.setGhost(event.getEntity(), false);
+    		}
+    		else {
+    			ghostFactory.setGhost(event.getEntity(), false);
+    		}
+    	}
+    }
 	
 	public void loadConfig() {
 		try {
@@ -48,6 +82,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 			config = new GhostPlayerConfig(this);
 			config.init();
 			autoUpdate = config.AutoUpdateOnLoad;
+			ghostOnDeath = config.TurnIntoGhostOnDeath;
 			}
 		catch(Exception ex) {
 			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
@@ -59,7 +94,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	public void startMetrics() {
 		try {
 		    Metrics metrics = new Metrics(this);
-		    Graph ghostsGraph = metrics.createGraph("Ghosts");
+		    Graph ghostsGraph = metrics.createGraph("Ghosts Graph");
 		    ghostsGraph.addPlotter(new Metrics.Plotter("Total ghosts") {
 		    @Override
 		    public int getValue() {
@@ -78,13 +113,15 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
     			public String getColumnName() {
     				if(autoUpdate == true) {
     					return "Yes";
-    				} else {
+    				}
+    				else {
     					return "No";
     				}
     			}
     		});
 		    metrics.start();
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
 		}
 	}
@@ -208,6 +245,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
                         			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
                         			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
                         			sender.sendMessage(Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
+                        			Bukkit.getPlayer(args[0]).sendMessage(player.getName() + " has removed you from the ghosts !");
                         		}
                         		else {
                         			sender.sendMessage(ChatColor.RED + Bukkit.getPlayer(args[0]).getName() + " is already an human !");
@@ -227,6 +265,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
                 			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
                 			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
 	        				sender.sendMessage("[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
+                			Bukkit.getPlayer(args[0]).sendMessage("You have been removed from the ghosts !");
 	        			}
 	        			else {
 	        				sender.sendMessage(ChatColor.RED + "[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " is already an human !");
