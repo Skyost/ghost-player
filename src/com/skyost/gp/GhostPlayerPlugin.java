@@ -23,9 +23,30 @@ import com.skyost.gp.Metrics.Graph;
 public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	public GhostFactory ghostFactory;
 	public GhostPlayerConfig config;
-	public static boolean autoUpdate;
-	public static boolean ghostOnDeath;
-	public int totalGhosts;
+	public GhostPlayerMessages messages;
+	public boolean autoUpdate;
+	public boolean ghostOnDeath;
+	public int totalGhosts = 0;
+	public String u1;
+	public String u2;
+	public String u3;
+	public String u4;
+	public String u5;
+	public String u6;
+	public String u7;
+	public String m1;
+	public String m2;
+	public String m3;
+	public String m4;
+	public String m5;
+	public String m6;
+	public String m7;
+	public String m8;
+	public String m9;
+	public String m10;
+	public String m11;
+	public String ms1;
+	public String ms2;
 	
 	public void onEnable() {
 		this.ghostFactory = new GhostFactory((Plugin) this);
@@ -38,6 +59,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	public void onDisable() {
 		try {
 			config.save();
+			messages.save();
 			getServer().getPluginManager().disablePlugin(this);
 		} 
 		catch (InvalidConfigurationException ex) {
@@ -81,8 +103,30 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 			System.setOut(new PrintStream(System.out, true, "cp850"));
 			config = new GhostPlayerConfig(this);
 			config.init();
+			messages = new GhostPlayerMessages(this);
+			messages.init();
 			autoUpdate = config.AutoUpdateOnLoad;
 			ghostOnDeath = config.TurnIntoGhostOnDeath;
+			u1 = messages.Update_SUCCESS;
+			u2 = messages.Update_NOUPDATE;
+			u3 = messages.Update_FAILDOWNLOAD;
+			u4 = messages.Update_FAILDBO;
+			u5 = messages.Update_FAILNOVERSION;
+			u6 = messages.Update_FAILBADSLUG;
+			u7 = messages.Update_UPDATEAVAILABLE;
+			m1 = messages.Message_1;
+			m2 = messages.Message_2;
+			m3 = messages.Message_3;
+			m4 = messages.Message_4;
+			m5 = messages.Message_5;
+			m6 = messages.Message_6;
+			m7 = messages.Message_7;
+			m8 = messages.Message_8;
+			m9 = messages.Message_9;
+			m10 = messages.Message_10;
+			m11 = messages.Message_11;
+			ms1 = messages.Message_S1;
+			ms2 = messages.Message_S2;
 			}
 		catch(Exception ex) {
 			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
@@ -114,8 +158,11 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
     				if(autoUpdate == true) {
     					return "Yes";
     				}
-    				else {
+    				else if(autoUpdate == false) {
     					return "No";
+    				}
+    				else {
+    					return "Maybe";
     				}
     			}
     		});
@@ -133,25 +180,25 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 				Updater.UpdateResult result = updater.getResult();
 	        		switch(result) {
 	            		case SUCCESS:
-	            			System.out.println("[Ghost Player] Update found: The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.");
+	            			System.out.println("[Ghost Player] " + u1);
 	            			break;
 	            		case NO_UPDATE:
-	            			System.out.println("[Ghost Player] No Update: The updater did not find an update, and nothing was downloaded.");
+	            			System.out.println("[Ghost Player] " + u2);
 	            			break;
 	            		case FAIL_DOWNLOAD:
-	            			System.out.println("[Ghost Player] Download Failed: The updater found an update, but was unable to download it.");
+	            			System.out.println("[Ghost Player] " + u3);
 	            			break;
 	            		case FAIL_DBO:
-	            			System.out.println("[Ghost Player] dev.bukkit.org Failed: For some reason, the updater was unable to contact DBO to download the file.");
+	            			System.out.println("[Ghost Player] " + u4);
 	            			break;
 	            		case FAIL_NOVERSION:
-	            			System.out.println("[Ghost Player] No version found: When running the version check, the file on DBO did not contain the a version in the format 'vVersion' such as 'v1.0'.");
+	            			System.out.println("[Ghost Player] " + u5);
 	            			break;
 	            		case FAIL_BADSLUG:
-	            			System.out.println("[Ghost Player] Bad slug: The slug provided by the plugin running the updater was invalid and doesn't exist on DBO.");
+	            			System.out.println("[Ghost Player] " + u6);
 	            			break;
 	            		case UPDATE_AVAILABLE:
-	            			System.out.println("[Ghost Player] Update found: There was an update found but not be downloaded !");
+	            			System.out.println("[Ghost Player] " + u7);
 	            			break;
 	        		}
 				}	
@@ -182,15 +229,15 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
                         		player.sendBlockChange(player.getTargetBlock(null, 100).getLocation(), Material.AIR, (byte) 0);
                         	}
                         	else {
-                        		sender.sendMessage(ChatColor.RED + "An human can't do this !");
+                        		sender.sendMessage(ChatColor.RED + m1); // An human can't do this !
                         	}
                         }
                         else {
-                        	sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
+                        	sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
                         }
 	        	}
 	        	else {
-	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] You can't do this from the console !");
+	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] " + ms2); // You can't do this from the console !
 	        	}
 	        }
 	        
@@ -198,7 +245,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        	if (sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.beghost")) {
                         	if(ghostFactory.isGhost(player) == true) {
-                        		sender.sendMessage(ChatColor.RED + "You are already a ghost !");
+                        		sender.sendMessage(ChatColor.RED + m2); // You are already a ghost !
                         	}
                         	else {
                         		ghostFactory.setGhost(player, true);
@@ -207,11 +254,11 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
                         	}
                         }
                         else {
-                        	sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
+                        	sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
                         }
 	        	}
 	        	else {
-	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] You can't do this from the console !");
+	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] " + ms2); // You can't do this from the console !
 	        	}
 	        }
 	       
@@ -219,21 +266,21 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        	if (sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.beghost")) {
                         	if(ghostFactory.isGhost(player) == true) {
-                        		sender.sendMessage(ChatColor.RED + "You are already a ghost !");
+                        		sender.sendMessage(ChatColor.RED + m2); // You are already a ghost !
                         	}
                         	else {
                         		ghostFactory.setGhost(player, true);
                         		ghostFactory.addPlayer(player);
-                        		sender.sendMessage("You are a ghost now !");
+                        		sender.sendMessage(m3); // You are a ghost now !
                         		totalGhosts = totalGhosts + 1;
                         	}
                         }
                         else {
-                        	sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
+                        	sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
                         }
 	        	}
 	        	else {
-	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] You can't do this from the console !");
+	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] " + ms2); // You can't do this from the console !
 	        	}
 	        }
 	        
@@ -244,19 +291,19 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
                         		if(ghostFactory.isGhost(Bukkit.getPlayer(args[0])) == true) {
                         			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
                         			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
-                        			sender.sendMessage(Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
-                        			Bukkit.getPlayer(args[0]).sendMessage(player.getName() + " has removed you from the ghosts !");
+                        			sender.sendMessage(Bukkit.getPlayer(args[0]).getName() + " " + m4); // Has been removed from the ghosts !
+                        			Bukkit.getPlayer(args[0]).sendMessage(player.getName() + " " + m5); // Has removed you from the ghosts !
                         		}
                         		else {
-                        			sender.sendMessage(ChatColor.RED + Bukkit.getPlayer(args[0]).getName() + " is already an human !");
+                        			sender.sendMessage(ChatColor.RED + Bukkit.getPlayer(args[0]).getName() + " " + m6); // Is already an human !
                         		}
                         	}
         	        		catch(NullPointerException e) {
-        	        			sender.sendMessage(ChatColor.RED + Bukkit.getPlayer(args[0]).getName() + " does not exist !");
+        	        			sender.sendMessage(ChatColor.RED + args[0] + " " + m7); // Does not exist or not connected !
         	        		}
                         }
                         else {
-                        	sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
+                        	sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
                         }
 	        	}
 	        	else {
@@ -264,15 +311,15 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        			if(ghostFactory.isGhost(Bukkit.getPlayer(args[0])) == true) {
                 			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
                 			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
-	        				sender.sendMessage("[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " has been removed from the ghosts !");
-                			Bukkit.getPlayer(args[0]).sendMessage("You have been removed from the ghosts !");
+	        				sender.sendMessage("[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " " + m4); // Has been removed from the ghosts !
+                			Bukkit.getPlayer(args[0]).sendMessage(m8); // You have been removed from the ghosts !
 	        			}
 	        			else {
-	        				sender.sendMessage(ChatColor.RED + "[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " is already an human !");
+	        				sender.sendMessage(ChatColor.RED + "[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " " + m6); // Is already an human !
 	        			}
 	        		}
 	        		catch(NullPointerException e) {
-	        			sender.sendMessage(ChatColor.RED + "[Ghost Player] " + Bukkit.getPlayer(args[0]).getName() + " does not exist !");
+	        			sender.sendMessage(ChatColor.RED + "[Ghost Player] " + args[0] + " " + m7); // Does not exist or not connected !
 	        		}
 	        	}
 	        }
@@ -285,15 +332,15 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
                 				ghostFactory.removePlayer(player);
 	        			}
 	        			else {
-	        				sender.sendMessage(ChatColor.RED + "You are already an human !");
+	        				sender.sendMessage(ChatColor.RED + m9); // You are already an human !
 	        			}
 	        		}
 	        		else {
-	        			sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
+	        			sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
 	        		}
 	        	}
 	        	else {
-	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] You can't do this from the console !");
+	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] " + ms2); // You can't do this from the console !
 	        	}
 	        }
 	        
@@ -303,18 +350,18 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        			if(ghostFactory.isGhost(player) == true) {
 		        				ghostFactory.setGhost(player, false);
 		        				ghostFactory.removePlayer(player);
-		        				sender.sendMessage("You are an human now !");
+		        				sender.sendMessage(m11); // You are an human now !
 	        			}
 	        			else {
-	        				sender.sendMessage(ChatColor.RED + "You are already an human !");
+	        				sender.sendMessage(ChatColor.RED + m9); // You are already an human !
 	        			}
 	        		}
 	        		else {
-	        			sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
+	        			sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
 	        		}
 	        	}
 	        	else {
-	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] You can't do this from the console !");
+	        		sender.sendMessage(ChatColor.RED + "[Ghost Player] " + ms2); // You can't do this from the console !
 	        	}
 	        }
 	        
@@ -322,15 +369,15 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        	if (sender instanceof Player) {
 	        		if(player.hasPermission("ghostplayer.admin.clearsghosts")) {
 	        			ghostFactory.clearMembers();
-	        			sender.sendMessage("All ghosts have been cleared !");
+	        			sender.sendMessage(m10); // All ghosts have been cleared !
 	        		}
 	        		else {
-	        			sender.sendMessage(ChatColor.RED + "You don't have permision to do this !");
+	        			sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
 	        		}
 	        	}
 	        	else {
         			ghostFactory.clearMembers();
-        			sender.sendMessage("[Ghost Player] All ghosts have been cleared !");
+        			sender.sendMessage("[Ghost Player] " + m10); // All ghosts have been cleared !
 	        	}
 	        }
 	        
