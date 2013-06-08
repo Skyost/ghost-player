@@ -6,8 +6,8 @@ import org.bukkit.plugin.Plugin;
 
 public class GhostPlayerMessages extends Config {
 	public GhostPlayerMessages(Plugin plugin) {
-		CONFIG_FILE = new File(plugin.getDataFolder(), "messages.yml");
-		CONFIG_HEADER = "Ghost Player Messages";
+		CONFIG_FILE = new File(plugin.getDataFolder(), "messages v" + plugin.getDescription().getVersion() + ".yml");
+		CONFIG_HEADER = "Ghost Player Messages - v" + plugin.getDescription().getVersion();;
 	}
 	public String Update_SUCCESS = "Update found: The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.";
 	public String Update_NOUPDATE = "No Update: The updater did not find an update, and nothing was downloaded.";
@@ -19,14 +19,15 @@ public class GhostPlayerMessages extends Config {
 	public String Message_1 = "An human can't do this !";
 	public String Message_2 = "You are already a ghost !";
 	public String Message_3 = "You are a ghost now !";
-	public String Message_4 = "has been removed from the ghosts !";
-	public String Message_5 = "has removed you from the ghosts !";
-	public String Message_6 = "is already an human !";
-	public String Message_7 = "does not exist or not connected !";
+	public String Message_4 = "/target/ has been removed from the ghosts !";
+	public String Message_5 = "/sender/ has removed you from the ghosts !";
+	public String Message_6 = "/target/ is already an human !";
+	public String Message_7 = "/target/ does not exist or not connected !";
 	public String Message_8 = "You have been removed from the ghosts !";
 	public String Message_9 = "You are already an human !";
-	public String Message_10 = "All ghosts have been cleared !";
+	public String Message_10 = "All ghosts have been cleared ! It take effect on restart/reload.";
 	public String Message_11 = "You are an human now !";
 	public String Message_S1 = "You don't have permission to do this !";
 	public String Message_S2 = "You can't do this from the console !";
+	public String Message_S3 = "This plugin is disabled in this world !";
 }
