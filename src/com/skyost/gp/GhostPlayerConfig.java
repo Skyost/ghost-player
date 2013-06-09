@@ -10,11 +10,9 @@ public class GhostPlayerConfig extends Config {
 		CONFIG_HEADER = "Ghost Player Configuration - v" + plugin.getDescription().getVersion();
 		CONFIG_HEADER += "\n\nWorlds where the plugin is disabled must be separed with space.";
 		CONFIG_HEADER += "\nUpdating the config gives you the opportunity to benefit all features from the new config.";
-		CONFIG_HEADER += "\nTime is in seconds.";
 	}
 	public boolean AutoUpdateOnLoad = true;
 	public boolean TurnIntoGhostOnDeath = false;
 	public boolean UpdateConfigOnPluginUpdate = true;
-	public String GhostTime = "LIFE";
 	public String WorldsDisabled = "";
 }

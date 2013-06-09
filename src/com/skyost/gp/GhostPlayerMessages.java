@@ -27,6 +27,7 @@ public class GhostPlayerMessages extends Config {
 	public String Message_9 = "You are already an human !";
 	public String Message_10 = "All ghosts have been cleared ! It take effect on restart/reload.";
 	public String Message_11 = "You are an human now !";
+	public String Message_12 = "Simply type /clearsghosts or /cg to clears all ghosts !";
 	public String Message_S1 = "You don't have permission to do this !";
 	public String Message_S2 = "You can't do this from the console !";
 	public String Message_S3 = "This plugin is disabled in this world !";

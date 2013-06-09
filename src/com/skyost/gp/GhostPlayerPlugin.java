@@ -48,11 +48,11 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	public String m9;
 	public String m10;
 	public String m11;
+	public String m12;
 	public String ms1;
 	public String ms2;
 	public String ms3;
 	public String worldsDisabled;
-	public String ghostTime;
 	
 	public void onEnable() {
 		this.ghostFactory = new GhostFactory((Plugin) this);
@@ -132,11 +132,11 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 			m9 = messages.Message_9;
 			m10 = messages.Message_10;
 			m11 = messages.Message_11;
+			m12 = messages.Message_12;
 			ms1 = messages.Message_S1;
 			ms2 = messages.Message_S2;
 			ms3 = messages.Message_S3;
 			worldsDisabled = config.WorldsDisabled;
-			ghostTime = config.GhostTime;
 			}
 		catch(Exception ex) {
 			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
@@ -345,8 +345,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        	}
 	        }
 	        
-	        if(cmd.getName().equalsIgnoreCase("removeghost") && args.length == 1) {
-	        	if (sender instanceof Player) {
+	        if(cmd.getName().equalsIgnoreCase("removeghost")) {
+	        	if(args.length == 1) {
+	        		if (sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.admin.removeghost")) {
                         	if(worldsDisabled.indexOf(player.getWorld().getName()) != -1) {
                         		sender.sendMessage(ChatColor.RED + ms3); // This plugin is disabled in this world !
@@ -364,35 +365,44 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
                         			else {
                         				m6 = m6.replaceAll("/target/", Bukkit.getPlayer(args[0]).getName());
         	        					sender.sendMessage(ChatColor.RED + m6); // Is already an human !
-        	        				}
-                        		}
-                        		catch(NullPointerException e) {
-                        			m7 = m7.replaceAll("/target/", args[0]);
-                        			sender.sendMessage(ChatColor.RED + m7); // Does not exist or not connected !
+        	        					}
+                        			}
+                        			catch(NullPointerException e) {
+                        				m7 = m7.replaceAll("/target/", args[0]);
+                        				sender.sendMessage(ChatColor.RED + m7); // Does not exist or not connected !
+                        			}
                         		}
                         	}
-                        }
                         else {
                         	sender.sendMessage(ChatColor.RED + ms1); // You don't have permission to do this !
                         }
-	        	}
-	        	else {
-	        		try {
-	        			if(ghostFactory.isGhost(Bukkit.getPlayer(args[0])) == true) {
-	        				m4 = m4.replaceAll("/target/", Bukkit.getPlayer(args[0]).getName());
-                			ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
-                			ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
-	        				sender.sendMessage("[Ghost Player] " + m4); // Has been removed from the ghosts !
-                			Bukkit.getPlayer(args[0]).sendMessage(m8); // You have been removed from the ghosts !
+	        		}
+	        		else {
+	        			try {
+	        				if(ghostFactory.isGhost(Bukkit.getPlayer(args[0])) == true) {
+	        					m4 = m4.replaceAll("/target/", Bukkit.getPlayer(args[0]).getName());
+	        					ghostFactory.setGhost(Bukkit.getPlayer(args[0]), false);
+	        					ghostFactory.removePlayer(Bukkit.getPlayer(args[0]));
+	        					sender.sendMessage("[Ghost Player] " + m4); // Has been removed from the ghosts !
+	        					Bukkit.getPlayer(args[0]).sendMessage(m8); // You have been removed from the ghosts !
+	        				}
+	        				else {
+	        					m6 = m6.replaceAll("/target/", Bukkit.getPlayer(args[0]).getName());
+	        					sender.sendMessage(ChatColor.RED + "[Ghost Player] " + m6); // Is already an human !
+	        				}
 	        			}
-	        			else {
-	        				m6 = m6.replaceAll("/target/", Bukkit.getPlayer(args[0]).getName());
-	        				sender.sendMessage(ChatColor.RED + "[Ghost Player] " + m6); // Is already an human !
+	        			catch(NullPointerException e) {
+	        				m7 = m7.replaceAll("/target/", args[0]);
+	        				sender.sendMessage(ChatColor.RED + "[Ghost Player] " + m7); // Does not exist or not connected !
 	        			}
 	        		}
-	        		catch(NullPointerException e) {
-	        			m7 = m7.replaceAll("/target/", args[0]);
-	        			sender.sendMessage(ChatColor.RED + "[Ghost Player] " + m7); // Does not exist or not connected !
+	        	}
+	        	else {
+	        		if (sender instanceof Player) {
+	        			sender.sendMessage(ChatColor.RED + m12); // Simply type /clearsghosts or /cg to clears all ghosts !
+	        		}
+	        		else {
+	        			sender.sendMessage(ChatColor.RED + "[Ghost Player] " + m12); // Simply type /clearsghosts or /cg to clears all ghosts !
 	        		}
 	        	}
 	        }
@@ -469,7 +479,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        	}
 	        }
 	        
-	        return false;
+	        return true;
 	    }
 
 }

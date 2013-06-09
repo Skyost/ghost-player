@@ -1,32 +1,46 @@
 name: Ghost Player
 main: com.skyost.gp.GhostPlayerPlugin
 description: Be ghooooooooost !
-version: 0.6
+version: 0.6.1
 author: Skyost
-website: http://www.imc-bans.eu/
+website: http://dev.bukkit.org/bukkit-mods/ghost-player/
 commands:
  ghostview:
   aliases: gv
-  description: /ghostview
+  description: Look at the block in front of you like a ghost.
+  usage: Simply type /ghostview or /gv to look at the block in front of you like a ghost.
+  permission: ghostplayer.player.ghostview
  ghost:
   aliases: g
-  description: /ghost
+  description: Turns you into a ghost and allow you to see ghosts.
+  usage: Simply type /ghost or /g to turn you into ghost !
+  permission: ghostplayer.player.beghost
  silentghost:
   aliases: sg
-  description: /silentghost
- removeghost:
-  aliases: rg
-  description: /removeghost <player>
- clearsghosts:
-  aliases: cg
-  description: /clearsghosts
+  description: The same than /ghost but doesn't tell "You are a ghost now !".
+  usage: Simply type /silentghost or /sg to turn you into ghost !
+  permission: ghostplayer.player.beghost
  human:
   aliases: h
-  description: /human
+  description: Turns you into a human and disallow you to see ghosts.
+  usage: Simply type /human or /h to turn you into human !
+  permission: ghostplayer.player.behuman
  silenthuman:
   aliases: sh
-  description: /silenthuman
-permisions:
+  description: The same than /human but doesn't tell "You are an human now !".
+  usage: Simply type /silenthuman or /sh to turn you into human !
+  permission: ghostplayer.player.behuman
+ removeghost:
+  aliases: rg
+  description: Remove <player> from the ghosts.
+  usage: Simply type /removeghost <player> or /rg <player> to remove <player> from the ghosts !
+  permission: ghostplayer.admin.removeghost
+ clearsghosts:
+  aliases: cg
+  description:  Clears all ghosts. May need a small reload/restart before taking any effect !
+  usage: Simply type /clearsghosts or /cg to clears all ghosts !
+  permission: ghostplayer.admin.clearsghosts
+permissions:
  ghostplayer.player.ghostview:
   default: true
   description: Allow you to view a block like a ghost !
