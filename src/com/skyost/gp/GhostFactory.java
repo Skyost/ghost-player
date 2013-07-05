@@ -77,6 +77,7 @@ public class GhostFactory {
     public void clearMembers() {
         if (ghostTeam != null) {
             for (OfflinePlayer player : getMembers()) {
+            	setGhost(player.getPlayer(), false);
                 ghostTeam.removePlayer(player);
             }
         }

@@ -1,7 +1,7 @@
 name: Ghost Player
 main: com.skyost.gp.GhostPlayerPlugin
 description: Be ghooooooooost !
-version: 0.6.1
+version: 1.0
 author: Skyost
 website: http://dev.bukkit.org/bukkit-mods/ghost-player/
 commands:
@@ -39,8 +39,59 @@ commands:
   aliases: cg
   description:  Clears all ghosts. May need a small reload/restart before taking any effect !
   usage: Simply type /clearsghosts or /cg to clears all ghosts !
-  permission: ghostplayer.admin.clearsghosts
+ humanworld:
+  aliases: hw
+  description:  Add a world to the list of the worlds where the plugin is disabled.
+  usage: Simply type /humanworld <world> or /hw <world> to add a world where the plugin is disabled !
+  permission: ghostplayer.admin.sethumanworld
+ ghostworld:
+  aliases: gw
+  description:  Remove a world from the list of the worlds where the plugin is disabled.
+  usage: Simply type /ghostworld <world> or /gw <world> to remove a world from the list where the plugin is disabled !
+  permission: ghostplayer.admin.setghostworld
+ ghosthunter:
+  aliases: gh
+  description:  Turns you into a ghost hunter, not an human but not a ghost !
+  usage: Simply type /ghosthunter or /gh to turns you into a ghost hunter !
+  permission: ghostplayer.player.beghosthunter
+ silentghosthunter:
+  aliases: sgh
+  description:  Turns you into a ghost hunter, not an human but not a ghost and doesn't tell "You are a ghost hunter now !".
+  usage: Simply type /silentghosthunter or /sgh to turns you into a ghost hunter !
+  permission: ghostplayer.player.beghosthunter
+ removeghosthunter:
+  aliases: rgh
+  description:  Remove <player> from the ghosts hunters.
+  usage: Simply type /removeghosthunter <player> or /rgh <player> to to remove <player> from the ghosts hunters !
+  permission: ghostplayer.player.beghosthunter
 permissions:
+ ghostplayer.player.*:
+  description: Give access to alls players commands.
+  children:
+   ghostplayer.player.ghostview: true
+   ghostplayer.player.beghost: true
+   ghostplayer.player.behuman: true
+   ghostplayer.player.beghosthunter: true
+ ghostplayer.admin.*:
+  description: Give access to alls administrators commands.
+  children:
+   ghostplayer.admin.removeghost: true
+   ghostplayer.admin.removeghosthunter: true
+   ghostplayer.admin.clearsghosts: true
+   ghostplayer.admin.sethumanworld: true
+   ghostplayer.admin.setghostworld: true
+ ghostplayer.*:
+  description: Give access to alls Ghost Player commands.
+  children:
+   ghostplayer.player.ghostview: true
+   ghostplayer.player.beghost: true
+   ghostplayer.player.behuman: true
+   ghostplayer.player.beghosthunter: true
+   ghostplayer.admin.removeghost: true
+   ghostplayer.admin.removeghosthunter: true
+   ghostplayer.admin.clearsghosts: true
+   ghostplayer.admin.sethumanworld: true
+   ghostplayer.admin.setghostworld: true
  ghostplayer.player.ghostview:
   default: true
   description: Allow you to view a block like a ghost !
@@ -50,9 +101,21 @@ permissions:
  ghostplayer.player.behuman:
   default: true
   description: Allow you to be an human !
+ ghostplayer.player.beghosthunter:
+  default: true
+  description: Allow you to be a ghost hunter !
  ghostplayer.admin.removeghost:
   default: op
   description: Allow you to remove a player from the ghosts !
+ ghostplayer.admin.removeghosthunter:
+  default: op
+  description: Allow you to remove a player from the ghosts hunters !
  ghostplayer.admin.clearsghosts:
   default: op
   description: Allow you to clears all ghosts !
+ ghostplayer.admin.sethumanworld:
+  default: op
+  description: Allow you to add a world to the list where the plugin is disabled !
+ ghostplayer.admin.setghostworld:
+  default: op
+  description: Allow you to remove a world from the list of the worlds where the plugin is disabled !
