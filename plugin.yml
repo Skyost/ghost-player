@@ -1,7 +1,7 @@
 name: Ghost Player
 main: com.skyost.gp.GhostPlayerPlugin
 description: Be ghooooooooost !
-version: 1.0
+version: 1.1
 author: Skyost
 website: http://dev.bukkit.org/bukkit-mods/ghost-player/
 commands:
@@ -66,14 +66,14 @@ commands:
   permission: ghostplayer.player.beghosthunter
 permissions:
  ghostplayer.player.*:
-  description: Give access to alls players commands.
+  description: Give access to every players commands.
   children:
    ghostplayer.player.ghostview: true
    ghostplayer.player.beghost: true
    ghostplayer.player.behuman: true
    ghostplayer.player.beghosthunter: true
  ghostplayer.admin.*:
-  description: Give access to alls administrators commands.
+  description: Give access to every administrators commands.
   children:
    ghostplayer.admin.removeghost: true
    ghostplayer.admin.removeghosthunter: true
@@ -81,7 +81,7 @@ permissions:
    ghostplayer.admin.sethumanworld: true
    ghostplayer.admin.setghostworld: true
  ghostplayer.*:
-  description: Give access to alls Ghost Player commands.
+  description: Give access to every Ghost Player commands.
   children:
    ghostplayer.player.ghostview: true
    ghostplayer.player.beghost: true

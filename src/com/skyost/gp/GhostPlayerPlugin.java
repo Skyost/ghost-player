@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -72,6 +73,117 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
     		if(ghostFactory.hasPlayer(event.getEntity()) == true) {
     			ghostFactory.removePlayer(event.getEntity());
     			ghostFactory.setGhost(event.getEntity(), false);
+    		}
+    	}
+    }
+    
+    @SuppressWarnings("unused")
+	@EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+    	Player player = event.getPlayer();
+    	if(!(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1)) {
+    		if(config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT HUMAN")) {
+    			if(player.hasPermission("ghostplayer.player.behuman")) {
+    				if(ghostFactory.isGhost(player) == true) {
+        				ghostFactory.setGhost(player, false);
+        				ghostFactory.removePlayer(player);
+    				}
+    			}
+    		}
+    		else if(config.TurnedIntoOnJoin.equalsIgnoreCase("HUMAN")) {
+    			if(player.hasPermission("ghostplayer.player.behuman")) {
+    				if(ghostFactory.isGhost(player) == true) {
+        				ghostFactory.setGhost(player, false);
+        				ghostFactory.removePlayer(player);
+    				}
+    				player.sendMessage(messages.Message_11); // You are an human now !
+    			}
+    		}
+    		else if(config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOST")) {
+    			if(player.hasPermission("ghostplayer.player.beghost")) {
+	    			if(ghostFactory.isGhost(player) == false) {
+	        			if(!(config.GhostTime.equals(-1))) {
+	        				try {
+	                			ghostFactory.setGhost(player, true);
+	                			ghostFactory.addPlayer(player);
+	                			totalGhosts = totalGhosts + 1;
+	        					BukkitTask task = new TurnHuman(player, true).runTaskLater(this, config.GhostTime);
+	        				}
+	        				catch(Exception e) {
+	        					try {
+	        						player.sendMessage(ChatColor.RED + messages.Message_17); // Invalid number in config for 'GhostTime'. It will be set to 'FOREVER'.
+	            					config.GhostTime = -1;
+									config.save();
+								}
+	        					catch (InvalidConfigurationException ex) {
+									ex.printStackTrace();
+								}
+	        				}
+	        			}
+	        			else {
+	        				ghostFactory.setGhost(player, true);
+	            			ghostFactory.addPlayer(player);
+	            			totalGhosts = totalGhosts + 1;
+	        			}
+	    			}
+        		}	
+			}
+    		else if(config.TurnedIntoOnJoin.equalsIgnoreCase("GHOST")) {
+    			if(player.hasPermission("ghostplayer.player.beghost")) {
+	    			if(ghostFactory.isGhost(player) == false) {
+	        			if(!(config.GhostTime.equals(-1))) {
+	        				try {
+	                			ghostFactory.setGhost(player, true);
+	                			ghostFactory.addPlayer(player);
+	                			player.sendMessage(messages.Message_3); // You are a ghost now !
+	                			totalGhosts = totalGhosts + 1;
+	        					BukkitTask task = new TurnHuman(player, true).runTaskLater(this, config.GhostTime);
+	        				}
+	        				catch(Exception e) {
+	        					try {
+	        						player.sendMessage(ChatColor.RED + messages.Message_17); // Invalid number in config for 'GhostTime'. It will be set to 'FOREVER'.
+	            					config.GhostTime = -1;
+									config.save();
+								}
+	        					catch (InvalidConfigurationException ex) {
+									ex.printStackTrace();
+								}
+	        				}
+	        			}
+	        			else {
+	        				ghostFactory.setGhost(player, true);
+	            			ghostFactory.addPlayer(player);
+	            			player.sendMessage(messages.Message_3); // You are a ghost now !
+	            			totalGhosts = totalGhosts + 1;
+	        			}
+	    			}
+        		}
+			}
+    		else if(config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOST HUNTER") || config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOST-HUNTER") || config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOSTHUNTER")) {
+    			if(player.hasPermission("ghostplayer.player.beghosthunter")) {
+                	if(ghostFactory.isGhost(player) == false || ghostFactory.hasPlayer(player) == false) {
+                		ghostFactory.addPlayer(player);
+                	}
+                }
+			}
+    		else if(config.TurnedIntoOnJoin.equalsIgnoreCase("GHOST HUNTER") || config.TurnedIntoOnJoin.equalsIgnoreCase("GHOST-HUNTER") || config.TurnedIntoOnJoin.equalsIgnoreCase("GHOSTHUNTER")) {
+    			if(player.hasPermission("ghostplayer.player.beghosthunter")) {
+                	if(ghostFactory.isGhost(player) == false || ghostFactory.hasPlayer(player) == false) {
+                		ghostFactory.addPlayer(player);
+                		player.sendMessage(messages.Message_20); // You are a ghost hunter now !
+                	}
+                }
+			}
+    		else {
+    			player.sendMessage(ChatColor.RED + messages.Message_26); // Invalid data in config for 'TurnedIntoOnJoin'. It will be set to 'HUMAN'.
+    			config.TurnedIntoOnJoin = "HUMAN";
+    			if(player.hasPermission("ghostplayer.player.behuman")) {
+    				if(ghostFactory.isGhost(player) == true) {
+        				ghostFactory.setGhost(player, false);
+        				ghostFactory.removePlayer(player);
+        				player.sendMessage(messages.Message_11); // You are an human now !
+    				}
+    			}
     		}
     	}
     }
@@ -197,14 +309,14 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args){
 	        Player player = null;
 	 
-	        if (sender instanceof Player) {
+	        if(sender instanceof Player) {
 	            player = (Player) sender;
 	        }
 	        
 	        if(cmd.getName().equalsIgnoreCase("ghostview")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.ghostview")) {
-                        	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                        	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                         		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                         	}
                         	else {
@@ -226,9 +338,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        }
 	        
 	        if(cmd.getName().equalsIgnoreCase("ghosthunter")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.beghosthunter")) {
-                        	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                        	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                         		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                         	}
                         	else {
@@ -254,9 +366,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        }
 	        
 	        if(cmd.getName().equalsIgnoreCase("silentghosthunter")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.beghosthunter")) {
-                        	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                        	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                         		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                         	}
                         	else {
@@ -282,7 +394,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        
 	        if(cmd.getName().equalsIgnoreCase("humanworld")) {
 	        	if(args.length >= 1) {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.admin.sethumanworld")) {
                         	try {
                         		String worldName = null;
@@ -327,7 +439,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        		}
 	        	}
 	        	else {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
 	        			sender.sendMessage(ChatColor.RED + messages.Message_14); // Simply type /humanworld <world> or /hw <world> to add a world where the plugin is disabled !
 	        		}
 	        		else {
@@ -338,7 +450,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        
 	        if(cmd.getName().equalsIgnoreCase("ghostworld")) {
 	        	if(args.length >= 1) {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.admin.setghostworld")) {
                         	try {
                         		String worldName = null;
@@ -373,7 +485,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        		}
 	        	}
 	        	else {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
 	        			sender.sendMessage(ChatColor.RED + messages.Message_16); // Simply type /humanworld <world> or /hw <world> to add a world where the plugin is disabled !
 	        		}
 	        		else {
@@ -383,9 +495,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        }
 	        
 	        if(cmd.getName().equalsIgnoreCase("silentghost")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.beghost")) {
-                        	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                        	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                         		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                         	}
                         	else {
@@ -429,9 +541,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        }
 	       
 	        if(cmd.getName().equalsIgnoreCase("ghost")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.player.beghost")) {
-                        	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                        	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                         		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                         	}
                         	else {
@@ -478,9 +590,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        
 	        if(cmd.getName().equalsIgnoreCase("removeghost")) {
 	        	if(args.length == 1) {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.admin.removeghost")) {
-                        	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                        	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                         		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                         	}
                         	else {
@@ -529,7 +641,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        		}
 	        	}
 	        	else {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
 	        			sender.sendMessage(ChatColor.RED + messages.Message_12); // Simply type /removeghost <player> or /rg <player> to remove <player> from the ghosts !
 	        		}
 	        		else {
@@ -540,9 +652,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        
 	        if(cmd.getName().equalsIgnoreCase("removeghosthunter")) {
 	        	if(args.length == 1) {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
                         if(player.hasPermission("ghostplayer.admin.removeghosthunter")) {
-                        	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                        	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                         		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                         	}
                         	else {
@@ -601,7 +713,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        		}
 	        	}
 	        	else {
-	        		if (sender instanceof Player) {
+	        		if(sender instanceof Player) {
 	        			sender.sendMessage(ChatColor.RED + messages.Message_25); // Simply type /removeghosthunter <player> or /rgh <player> to remove <player> from the ghosts hunters !
 	        		}
 	        		else {
@@ -611,9 +723,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        }
 	        
 	        if(cmd.getName().equalsIgnoreCase("silenthuman")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
 	        		if(player.hasPermission("ghostplayer.player.behuman")) {
-                    	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                    	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                     		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                     	}
                     	else {
@@ -636,9 +748,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        }
 	        
 	        if(cmd.getName().equalsIgnoreCase("human")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
 	        		if(player.hasPermission("ghostplayer.player.behuman")) {
-                    	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                    	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                     		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                     	}
                     	else {
@@ -662,9 +774,9 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	        }
 	        
 	        if(cmd.getName().equalsIgnoreCase("clearsghosts")) {
-	        	if (sender instanceof Player) {
+	        	if(sender instanceof Player) {
 	        		if(player.hasPermission("ghostplayer.admin.clearsghosts")) {
-                    	if(config.WorldsDisabled.indexOf(player.getWorld().getName()) != -1) {
+                    	if(config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) != -1) {
                     		sender.sendMessage(ChatColor.RED + messages.Message_S3); // This plugin is disabled in this world !
                     	}
                     	else {
