@@ -14,6 +14,7 @@ public class GhostPlayerConfig extends Config {
 	}
 	public boolean AutoUpdateOnLoad = true;
 	public boolean TurnIntoGhostOnDeath = false;
+	public boolean GhostsCanInteract = true;
 	public String TurnedIntoOnJoin = "SILENT HUMAN";
 	public String WorldsDisabled = "";
 	public Integer GhostTime = -1;
