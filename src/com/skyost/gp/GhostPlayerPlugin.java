@@ -235,7 +235,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 	
 	public void loadConfig() {
 		try {
-			System.setOut(new PrintStream(System.out, true, "cp850"));
+			System.setOut(new PrintStream(System.out, true, "UTF-8"));
 			config = new GhostPlayerConfig(this);
 			config.init();
 			messages = new GhostPlayerMessages(this);
@@ -328,7 +328,7 @@ public class GhostPlayerPlugin extends JavaPlugin implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "deprecation" })
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args){
 	        Player player = null;
 	 

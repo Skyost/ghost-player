@@ -40,7 +40,7 @@ public class GhostPlayerMessages extends Config {
 	public String Message_21 = "/target/ is not a ghost hunter !";
 	public String Message_22 = "/target/ has been removed from the ghosts hunters !";
 	public String Message_23 = "You have been removed from the ghosts hunters !";
-	public String Message_24 = "/sender/ been removed you from the ghosts hunters !";
+	public String Message_24 = "/sender/ has been removed you from the ghosts hunters !";
 	public String Message_25 = "Simply type /removeghosthunter <player> or /rgh <player> to remove <player> from the ghosts hunters !";
 	public String Message_26 = "Invalid data in config for 'TurnedIntoOnJoin'. It will be set to 'HUMAN'.";
 	public String Message_27 = "This player is already a ghost so he don't need to be a ghost hunter !";
