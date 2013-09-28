@@ -24,9 +24,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.skyost.gp.Metrics.Graph;
+import com.skyost.gp.config.GhostPlayerConfig;
+import com.skyost.gp.config.GhostPlayerMessages;
+import com.skyost.gp.util.GhostFactory;
+import com.skyost.gp.util.Metrics;
+import com.skyost.gp.util.Updater;
+import com.skyost.gp.util.Metrics.Graph;
 
-public class GhostPlayerPlugin extends JavaPlugin implements Listener {
+public class GhostPlayer extends JavaPlugin implements Listener {
 	
 	public static GhostFactory ghostFactory;
 	public GhostPlayerConfig config;

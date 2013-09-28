@@ -1,8 +1,10 @@
-package com.skyost.gp;
+package com.skyost.gp.config;
 
 import java.io.File;
 
 import org.bukkit.plugin.Plugin;
+
+import com.skyost.gp.util.Config;
 
 public class GhostPlayerConfig extends Config {
 	public GhostPlayerConfig(Plugin plugin) {

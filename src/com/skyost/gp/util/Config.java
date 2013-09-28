@@ -1,4 +1,4 @@
-package com.skyost.gp;
+package com.skyost.gp.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
