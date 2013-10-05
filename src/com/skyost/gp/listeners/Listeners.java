@@ -18,7 +18,7 @@ import com.skyost.gp.tasks.TurnHuman;
 public class Listeners implements Listener {
 	
 	@EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    private static final void onPlayerQuit(PlayerQuitEvent event) {
     	if(GhostPlayer.ghostFactory.isGhost(event.getPlayer()) == true) {
     		GhostPlayer.ghostFactory.setGhost(event.getPlayer(), false);
     	}
@@ -28,7 +28,7 @@ public class Listeners implements Listener {
     }
     
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    private static final void onPlayerDeath(PlayerDeathEvent event) {
     	if(GhostPlayer.config.WorldsDisabled.toUpperCase().indexOf(event.getEntity().getWorld().getName().toUpperCase()) == -1) {
 	    	if(GhostPlayer.config.TurnIntoGhostOnDeath == true) {
 	    		if(GhostPlayer.ghostFactory.hasPlayer(event.getEntity()) == true) {
@@ -46,7 +46,7 @@ public class Listeners implements Listener {
     }
     
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e) {
+    private static final void onPlayerInteract(PlayerInteractEvent e) {
     	if(GhostPlayer.config.WorldsDisabled.toUpperCase().indexOf(e.getPlayer().getWorld().getName().toUpperCase()) == -1) {
 	    	if(GhostPlayer.config.GhostsCanInteract == false) {
 		    	Player player = e.getPlayer();
@@ -60,7 +60,7 @@ public class Listeners implements Listener {
     
     @SuppressWarnings("unused")
 	@EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    private static final void onPlayerJoin(PlayerJoinEvent event) {
     	Player player = event.getPlayer();
     	if(GhostPlayer.config.WorldsDisabled.toUpperCase().indexOf(player.getWorld().getName().toUpperCase()) == -1) {
     		if(GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT HUMAN")) {

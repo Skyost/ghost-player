@@ -1,15 +1,17 @@
 package com.skyost.gp;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import com.skyost.gp.config.GhostPlayerConfig;
 import com.skyost.gp.config.GhostPlayerMessages;
+import com.skyost.gp.listeners.Commands;
 import com.skyost.gp.listeners.Listeners;
 import com.skyost.gp.util.GhostFactory;
 import com.skyost.gp.util.Metrics;
@@ -23,10 +25,9 @@ public class GhostPlayer extends JavaPlugin {
 	public static GhostPlayerMessages messages;
 	public static int totalGhosts;
 	
-	@SuppressWarnings("static-access")
 	public void onEnable() {
-		this.ghostFactory = new GhostFactory((Plugin) this);
-		this.getServer().getPluginManager().registerEvents(new Listeners(), this);
+		ghostFactory = new GhostFactory((Plugin) this);
+		setListeners();
 		loadConfig();
 		update();
 		startMetrics();
@@ -43,7 +44,7 @@ public class GhostPlayer extends JavaPlugin {
 		}
 	}
 	
-	public void loadConfig() {
+	private final void loadConfig() {
 		try {
 			System.setOut(new PrintStream(System.out, true, "UTF-8"));
 			config = new GhostPlayerConfig(this);
@@ -58,7 +59,7 @@ public class GhostPlayer extends JavaPlugin {
 		}
 	}
 	
-	public void startMetrics() {
+	private final void startMetrics() {
 		try {
 		    Metrics metrics = new Metrics(this);
 		    Graph ghostsGraph = metrics.createGraph("Ghosts Graph");
@@ -97,12 +98,7 @@ public class GhostPlayer extends JavaPlugin {
 		}
 	}
 	
-	public void deleteFile(String file) {
-		File filename = new File(file);
-		filename.delete();
-	}
-	
-	public void update() {
+	private final void update() {
 		if(config.AutoUpdateOnLoad == true) {
 			try {
 				Updater updater = new Updater(this, "ghost-player", this.getFile(), Updater.UpdateType.DEFAULT, true);
@@ -136,5 +132,22 @@ public class GhostPlayer extends JavaPlugin {
 				getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
 			}
 		}
+	}
+	
+	private final void setListeners() {
+		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
+		Commands executor = new Commands();
+		this.getCommand("ghostview").setExecutor(executor);
+		this.getCommand("ghost").setExecutor(executor);
+		this.getCommand("silentghost").setExecutor(executor);
+		this.getCommand("human").setExecutor(executor);
+		this.getCommand("silenthuman").setExecutor(executor);
+		this.getCommand("removeghost").setExecutor(executor);
+		this.getCommand("clearsghosts").setExecutor(executor);
+		this.getCommand("humanworld").setExecutor(executor);
+		this.getCommand("ghostworld").setExecutor(executor);
+		this.getCommand("ghosthunter").setExecutor(executor);
+		this.getCommand("silentghosthunter").setExecutor(executor);
+		this.getCommand("removeghosthunter").setExecutor(executor);
 	}
 }
