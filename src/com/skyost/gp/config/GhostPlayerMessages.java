@@ -16,7 +16,6 @@ public class GhostPlayerMessages extends Config {
 	public String Update_FAILDOWNLOAD = "Download Failed: The updater found an update, but was unable to download it.";
 	public String Update_FAILDBO = "dev.bukkit.org Failed: For some reason, the updater was unable to contact DBO to download the file.";
 	public String Update_FAILNOVERSION = "No version found: When running the version check, the file on DBO did not contain the a version in the format 'vVersion' such as 'v1.0'.";
-	public String Update_FAILBADSLUG = "Bad slug: The slug provided by the plugin running the updater was invalid and doesn't exist on DBO.";
 	public String Update_UPDATEAVAILABLE = "Update found: There was an update found but not be downloaded !";
 	
 	public String Message_1 = "An human can't do this !";

@@ -69,28 +69,6 @@ public class GhostPlayer extends JavaPlugin {
 		        return totalGhosts;	
 		       }
 		    });
-		    
-    		Graph updateGraph = metrics.createGraph("Update Graph");
-    		updateGraph.addPlotter(new Metrics.Plotter("Checking for Updates") {	
-    			@Override
-    			public int getValue() {	
-    				return 1;
-    			}
-    			
-    			@Override
-    			public String getColumnName() {
-    				if(config.AutoUpdateOnLoad == true) {
-    					return "Yes";
-    				}
-    				else if(config.AutoUpdateOnLoad == false) {
-    					return "No";
-    				}
-    				else {
-    					return "Maybe";
-    				}
-    			}
-    		});
-    		
 		    metrics.start();
 		}
 		catch (IOException ex) {
@@ -98,39 +76,35 @@ public class GhostPlayer extends JavaPlugin {
 		}
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	private final void update() {
-		if(config.AutoUpdateOnLoad == true) {
 			try {
-				Updater updater = new Updater(this, "ghost-player", this.getFile(), Updater.UpdateType.DEFAULT, true);
+				Updater updater = new Updater(this, 58232, this.getFile(), Updater.UpdateType.DEFAULT, true);
 				Updater.UpdateResult result = updater.getResult();
-	        		switch(result) {
-	            		case SUCCESS:
-		            		System.out.println("[Ghost Player] " + messages.Update_SUCCESS);
-		            		getServer().getPluginManager().disablePlugin(this);
-	            			break;
-	            		case NO_UPDATE:
-	            			System.out.println("[Ghost Player] " + messages.Update_NOUPDATE);
-	            			break;
-	            		case FAIL_DOWNLOAD:
-	            			System.out.println("[Ghost Player] " + messages.Update_FAILDOWNLOAD);
-	            			break;
-	            		case FAIL_DBO:
-	            			System.out.println("[Ghost Player] " + messages.Update_FAILDBO);
-	            			break;
-	            		case FAIL_NOVERSION:
-	            			System.out.println("[Ghost Player] " + messages.Update_FAILNOVERSION);
-	            			break;
-	            		case FAIL_BADSLUG:
-	            			System.out.println("[Ghost Player] " + messages.Update_FAILBADSLUG);
-	            			break;
-	            		case UPDATE_AVAILABLE:
-	            			System.out.println("[Ghost Player] " + messages.Update_UPDATEAVAILABLE);
-	            			break;
-	        		}
-				}	
-			catch (Exception ex) {
-				getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
-			}
+	        	switch(result) {
+	            	case SUCCESS:
+		           		System.out.println("[Ghost Player] " + messages.Update_SUCCESS);
+		           		getServer().getPluginManager().disablePlugin(this);
+	            		break;
+	            	case NO_UPDATE:
+	            		System.out.println("[Ghost Player] " + messages.Update_NOUPDATE);
+	            		break;
+	           		case FAIL_DOWNLOAD:
+	            		System.out.println("[Ghost Player] " + messages.Update_FAILDOWNLOAD);
+	           			break;
+	           		case FAIL_DBO:
+	            		System.out.println("[Ghost Player] " + messages.Update_FAILDBO);
+	            		break;
+	           		case FAIL_NOVERSION:
+	           			System.out.println("[Ghost Player] " + messages.Update_FAILNOVERSION);
+	           			break;
+	           		case UPDATE_AVAILABLE:
+	           			System.out.println("[Ghost Player] " + messages.Update_UPDATEAVAILABLE);
+	           			break;
+	       		}
+			}	
+		catch (Exception ex) {
+			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
 		}
 	}
 	
