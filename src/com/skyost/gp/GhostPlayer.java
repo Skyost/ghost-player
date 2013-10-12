@@ -29,7 +29,9 @@ public class GhostPlayer extends JavaPlugin {
 		ghostFactory = new GhostFactory((Plugin) this);
 		setListeners();
 		loadConfig();
-		update();
+		if(config.AutoUpdateOnLoad) {
+			update();
+		}
 		startMetrics();
 	}
 	
@@ -78,31 +80,31 @@ public class GhostPlayer extends JavaPlugin {
 	
 	@SuppressWarnings("incomplete-switch")
 	private final void update() {
-			try {
-				Updater updater = new Updater(this, 58232, this.getFile(), Updater.UpdateType.DEFAULT, true);
-				Updater.UpdateResult result = updater.getResult();
-	        	switch(result) {
-	            	case SUCCESS:
-		           		System.out.println("[Ghost Player] " + messages.Update_SUCCESS);
-		           		getServer().getPluginManager().disablePlugin(this);
-	            		break;
-	            	case NO_UPDATE:
-	            		System.out.println("[Ghost Player] " + messages.Update_NOUPDATE);
-	            		break;
-	           		case FAIL_DOWNLOAD:
-	            		System.out.println("[Ghost Player] " + messages.Update_FAILDOWNLOAD);
-	           			break;
-	           		case FAIL_DBO:
-	            		System.out.println("[Ghost Player] " + messages.Update_FAILDBO);
-	            		break;
-	           		case FAIL_NOVERSION:
-	           			System.out.println("[Ghost Player] " + messages.Update_FAILNOVERSION);
-	           			break;
-	           		case UPDATE_AVAILABLE:
-	           			System.out.println("[Ghost Player] " + messages.Update_UPDATEAVAILABLE);
-	           			break;
-	       		}
-			}	
+		try {
+			Updater updater = new Updater(this, 58232, this.getFile(), Updater.UpdateType.DEFAULT, true);
+			Updater.UpdateResult result = updater.getResult();
+	       	switch(result) {
+	       		case SUCCESS:
+		           	System.out.println("[Ghost Player] " + messages.Update_SUCCESS);
+		           	getServer().getPluginManager().disablePlugin(this);
+	            	break;
+	            case NO_UPDATE:
+	            	System.out.println("[Ghost Player] " + messages.Update_NOUPDATE);
+	            	break;
+	           	case FAIL_DOWNLOAD:
+	            	System.out.println("[Ghost Player] " + messages.Update_FAILDOWNLOAD);
+	           		break;
+	           	case FAIL_DBO:
+	            	System.out.println("[Ghost Player] " + messages.Update_FAILDBO);
+	            	break;
+	           	case FAIL_NOVERSION:
+	           		System.out.println("[Ghost Player] " + messages.Update_FAILNOVERSION);
+	           		break;
+	           	case UPDATE_AVAILABLE:
+	           		System.out.println("[Ghost Player] " + messages.Update_UPDATEAVAILABLE);
+	           		break;
+	       	}
+		}	
 		catch (Exception ex) {
 			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
 		}
