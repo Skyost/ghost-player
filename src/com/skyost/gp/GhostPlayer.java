@@ -85,23 +85,23 @@ public class GhostPlayer extends JavaPlugin {
 			Updater.UpdateResult result = updater.getResult();
 	       	switch(result) {
 	       		case SUCCESS:
-		           	System.out.println("[Ghost Player] " + messages.Update_SUCCESS);
+		           	System.out.println("[Ghost Player] Update found: The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.");
 		           	getServer().getPluginManager().disablePlugin(this);
 	            	break;
 	            case NO_UPDATE:
-	            	System.out.println("[Ghost Player] " + messages.Update_NOUPDATE);
+	            	System.out.println("[Ghost Player] No Update: The updater did not find an update, and nothing was downloaded.");
 	            	break;
 	           	case FAIL_DOWNLOAD:
-	            	System.out.println("[Ghost Player] " + messages.Update_FAILDOWNLOAD);
+	            	System.out.println("[Ghost Player] Download Failed: The updater found an update, but was unable to download it.");
 	           		break;
 	           	case FAIL_DBO:
-	            	System.out.println("[Ghost Player] " + messages.Update_FAILDBO);
+	            	System.out.println("[Ghost Player] dev.bukkit.org Failed: For some reason, the updater was unable to contact DBO to download the file.");
 	            	break;
 	           	case FAIL_NOVERSION:
-	           		System.out.println("[Ghost Player] " + messages.Update_FAILNOVERSION);
+	           		System.out.println("[Ghost Player] No version found: When running the version check, the file on DBO did not contain the a version in the format 'vVersion' such as 'v1.0'.");
 	           		break;
 	           	case UPDATE_AVAILABLE:
-	           		System.out.println("[Ghost Player] " + messages.Update_UPDATEAVAILABLE);
+	           		System.out.println("[Ghost Player] Update found: There was an update found but not be downloaded !");
 	           		break;
 	       	}
 		}	

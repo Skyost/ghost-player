@@ -10,8 +10,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitTask;
-
 import com.skyost.gp.GhostPlayer;
 import com.skyost.gp.tasks.TurnHuman;
 
@@ -48,7 +46,7 @@ public class Listeners implements Listener {
     @EventHandler
     private static final void onPlayerInteract(PlayerInteractEvent e) {
     	if(GhostPlayer.config.WorldsDisabled.toUpperCase().indexOf(e.getPlayer().getWorld().getName().toUpperCase()) == -1) {
-	    	if(GhostPlayer.config.GhostsCanInteract == false) {
+	    	if(!GhostPlayer.config.GhostsCanInteract) {
 		    	Player player = e.getPlayer();
 		    	if(GhostPlayer.ghostFactory.isGhost(player) == true) {
 		    		player.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_31);
@@ -58,7 +56,6 @@ public class Listeners implements Listener {
     	}
     }
     
-    @SuppressWarnings("unused")
 	@EventHandler
     private static final void onPlayerJoin(PlayerJoinEvent event) {
     	Player player = event.getPlayer();
@@ -82,13 +79,13 @@ public class Listeners implements Listener {
     		}
     		else if(GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOST")) {
     			if(player.hasPermission("ghostplayer.player.beghost")) {
-	    			if(GhostPlayer.ghostFactory.isGhost(player) == false) {
+	    			if(!GhostPlayer.ghostFactory.isGhost(player)) {
 	        			if(!(GhostPlayer.config.GhostTime.equals(-1))) {
 	        				try {
 	                			GhostPlayer.ghostFactory.setGhost(player, true);
 	                			GhostPlayer.ghostFactory.addPlayer(player);
 	                			GhostPlayer.totalGhosts++;
-	        					BukkitTask task = new TurnHuman(player.getName(), true).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.GhostTime);
+	        					new TurnHuman(player.getName(), true).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.GhostTime);
 	        				}
 	        				catch(Exception e) {
 	        					try {
@@ -111,14 +108,14 @@ public class Listeners implements Listener {
 			}
     		else if(GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("GHOST")) {
     			if(player.hasPermission("ghostplayer.player.beghost")) {
-	    			if(GhostPlayer.ghostFactory.isGhost(player) == false) {
+	    			if(!GhostPlayer.ghostFactory.isGhost(player)) {
 	        			if(!(GhostPlayer.config.GhostTime.equals(-1))) {
 	        				try {
 	                			GhostPlayer.ghostFactory.setGhost(player, true);
 	                			GhostPlayer.ghostFactory.addPlayer(player);
 	                			player.sendMessage(GhostPlayer.messages.Message_3); // You are a ghost now !
 	                			GhostPlayer.totalGhosts++;
-	        					BukkitTask task = new TurnHuman(player.getName(), true).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.GhostTime);
+	        					new TurnHuman(player.getName(), true).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.GhostTime);
 	        				}
 	        				catch(Exception e) {
 	        					try {
@@ -142,14 +139,14 @@ public class Listeners implements Listener {
 			}
     		else if(GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOST HUNTER") || GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOST-HUNTER") || GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT GHOSTHUNTER")) {
     			if(player.hasPermission("ghostplayer.player.beghosthunter")) {
-                	if(GhostPlayer.ghostFactory.isGhost(player) == false || GhostPlayer.ghostFactory.hasPlayer(player) == false) {
+                	if(!GhostPlayer.ghostFactory.isGhost(player) || !GhostPlayer.ghostFactory.hasPlayer(player)) {
                 		GhostPlayer.ghostFactory.addPlayer(player);
                 	}
                 }
 			}
     		else if(GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("GHOST HUNTER") || GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("GHOST-HUNTER") || GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("GHOSTHUNTER")) {
     			if(player.hasPermission("ghostplayer.player.beghosthunter")) {
-                	if(GhostPlayer.ghostFactory.isGhost(player) == false || GhostPlayer.ghostFactory.hasPlayer(player) == false) {
+                	if(!GhostPlayer.ghostFactory.isGhost(player) || !GhostPlayer.ghostFactory.hasPlayer(player)) {
                 		GhostPlayer.ghostFactory.addPlayer(player);
                 		player.sendMessage(GhostPlayer.messages.Message_20); // You are a ghost hunter now !
                 	}
