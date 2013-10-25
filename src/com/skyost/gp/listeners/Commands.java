@@ -446,7 +446,7 @@ public class Commands implements CommandExecutor {
                     	if(GhostPlayer.ghostFactory.isGhost(player)) {
                 			GhostPlayer.ghostFactory.setGhost(player, false);
                 			GhostPlayer.ghostFactory.removePlayer(player);
-                			sender.sendMessage(GhostPlayer.messages.Message_11); // You are an human now !
+                			player.sendMessage(GhostPlayer.messages.Message_11); // You are an human now !
                     	}
                     	else {
                     		if(sender instanceof Player) {
