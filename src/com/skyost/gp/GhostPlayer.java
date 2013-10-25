@@ -66,10 +66,12 @@ public class GhostPlayer extends JavaPlugin {
 		    Metrics metrics = new Metrics(this);
 		    Graph ghostsGraph = metrics.createGraph("Ghosts Graph");
 		    ghostsGraph.addPlotter(new Metrics.Plotter("Total ghosts") {
-		    @Override
-		    public int getValue() {
-		        return totalGhosts;	
-		       }
+		    	
+			    @Override
+			    public int getValue() {
+			        return totalGhosts;
+			    }
+			    
 		    });
 		    metrics.start();
 		}
@@ -86,7 +88,7 @@ public class GhostPlayer extends JavaPlugin {
 	       	switch(result) {
 	       		case SUCCESS:
 		           	System.out.println("[Ghost Player] Update found: The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.");
-		           	getServer().getPluginManager().disablePlugin(this);
+		           	Bukkit.getPluginManager().disablePlugin(this);
 	            	break;
 	            case NO_UPDATE:
 	            	System.out.println("[Ghost Player] No Update: The updater did not find an update, and nothing was downloaded.");
