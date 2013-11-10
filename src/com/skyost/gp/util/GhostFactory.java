@@ -46,9 +46,9 @@ public class GhostFactory {
         // Create a new ghost team if needed
         if (ghostTeam == null) {
             ghostTeam = board.registerNewTeam(GHOST_TEAM_NAME);
-            ghostTeam.setCanSeeFriendlyInvisibles(true);
         }
  
+        ghostTeam.setCanSeeFriendlyInvisibles(true);
  
     }
  
