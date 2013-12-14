@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.skyost.gp.GhostPlayer;
 import com.skyost.gp.tasks.TurnHuman;
 
-public class Listeners implements Listener {
+public class EventsListener implements Listener {
 	
 	@EventHandler
     private static final void onPlayerQuit(PlayerQuitEvent event) {

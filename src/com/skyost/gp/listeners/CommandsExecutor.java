@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import com.skyost.gp.GhostPlayer;
 import com.skyost.gp.tasks.TurnHuman;
 
-public class Commands implements CommandExecutor {
+public class CommandsExecutor implements CommandExecutor {
 
 	@SuppressWarnings({ "deprecation" })
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args){

@@ -11,12 +11,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.skyost.gp.config.GhostPlayerConfig;
 import com.skyost.gp.config.GhostPlayerMessages;
-import com.skyost.gp.listeners.Commands;
-import com.skyost.gp.listeners.Listeners;
-import com.skyost.gp.util.GhostFactory;
-import com.skyost.gp.util.Metrics;
-import com.skyost.gp.util.Updater;
-import com.skyost.gp.util.Metrics.Graph;
+import com.skyost.gp.listeners.CommandsExecutor;
+import com.skyost.gp.listeners.EventsListener;
+import com.skyost.gp.utils.GhostFactory;
+import com.skyost.gp.utils.Metrics;
+import com.skyost.gp.utils.Updater;
+import com.skyost.gp.utils.Metrics.Graph;
 
 public class GhostPlayer extends JavaPlugin {
 	
@@ -113,8 +113,8 @@ public class GhostPlayer extends JavaPlugin {
 	}
 	
 	private final void setListeners() {
-		Bukkit.getPluginManager().registerEvents(new Listeners(), this);
-		Commands executor = new Commands();
+		Bukkit.getPluginManager().registerEvents(new EventsListener(), this);
+		CommandsExecutor executor = new CommandsExecutor();
 		this.getCommand("ghostview").setExecutor(executor);
 		this.getCommand("ghost").setExecutor(executor);
 		this.getCommand("silentghost").setExecutor(executor);
@@ -128,4 +128,5 @@ public class GhostPlayer extends JavaPlugin {
 		this.getCommand("silentghosthunter").setExecutor(executor);
 		this.getCommand("removeghosthunter").setExecutor(executor);
 	}
+	
 }

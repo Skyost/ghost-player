@@ -1,4 +1,4 @@
-package com.skyost.gp.util;
+package com.skyost.gp.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

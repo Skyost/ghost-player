@@ -6,9 +6,16 @@ import java.util.List;
 
 import org.bukkit.plugin.Plugin;
 
-import com.skyost.gp.util.Config;
+import com.skyost.gp.utils.Config;
 
 public class GhostPlayerConfig extends Config {
+	
+	public boolean AutoUpdateOnLoad = true;
+	public boolean TurnIntoGhostOnDeath = false;
+	public boolean GhostsCanInteract = true;
+	public String TurnedIntoOnJoin = "SILENT HUMAN";
+	public List<String> HumanWorlds = new ArrayList<String>();
+	public Integer GhostTime = -1;
 	
 	public GhostPlayerConfig(Plugin plugin) {
 		CONFIG_FILE = new File(plugin.getDataFolder(), "config.yml");
@@ -21,10 +28,4 @@ public class GhostPlayerConfig extends Config {
 		HumanWorlds.add("WorldC");
 	}
 	
-	public boolean AutoUpdateOnLoad = true;
-	public boolean TurnIntoGhostOnDeath = false;
-	public boolean GhostsCanInteract = true;
-	public String TurnedIntoOnJoin = "SILENT HUMAN";
-	public List<String> HumanWorlds = new ArrayList<String>();
-	public Integer GhostTime = -1;
 }

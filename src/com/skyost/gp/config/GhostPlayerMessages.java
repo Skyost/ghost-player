@@ -4,14 +4,9 @@ import java.io.File;
 
 import org.bukkit.plugin.Plugin;
 
-import com.skyost.gp.util.Config;
+import com.skyost.gp.utils.Config;
 
 public class GhostPlayerMessages extends Config {
-	
-	public GhostPlayerMessages(Plugin plugin) {
-		CONFIG_FILE = new File(plugin.getDataFolder(), "messages.yml");
-		CONFIG_HEADER = "Ghost Player Messages";
-	}
 	
 	public String Message_1 = "An human can't do this !";
 	public String Message_2 = "You are already a ghost !";
@@ -50,4 +45,10 @@ public class GhostPlayerMessages extends Config {
 	public String Message_S3 = "This plugin is disabled in this world !";
 	public String Message_S4 = "This player is offline !";
 	public String Message_S5 = "You must have at least one argument !";
+	
+	public GhostPlayerMessages(Plugin plugin) {
+		CONFIG_FILE = new File(plugin.getDataFolder(), "messages.yml");
+		CONFIG_HEADER = "Ghost Player Messages";
+	}
+	
 }
