@@ -1,9 +1,9 @@
 name: Ghost Player
 main: com.skyost.gp.GhostPlayer
 description: Be ghooooooooost !
-version: 1.4.2
+version: 1.4.3
 author: Skyost
-website: http://dev.bukkit.org/bukkit-mods/ghost-player/
+website: http://www.skyost.eu
 commands:
  ghostview:
   aliases: gv

@@ -15,7 +15,7 @@ import com.skyost.gp.listeners.CommandsExecutor;
 import com.skyost.gp.listeners.EventsListener;
 import com.skyost.gp.utils.GhostFactory;
 import com.skyost.gp.utils.Metrics;
-import com.skyost.gp.utils.Updater;
+import com.skyost.gp.utils.Skyupdater;
 import com.skyost.gp.utils.Metrics.Graph;
 
 public class GhostPlayer extends JavaPlugin {
@@ -26,13 +26,18 @@ public class GhostPlayer extends JavaPlugin {
 	public static int totalGhosts;
 	
 	public void onEnable() {
-		ghostFactory = new GhostFactory((Plugin) this);
-		setListeners();
-		loadConfig();
-		if(config.AutoUpdateOnLoad) {
-			update();
+		try {
+			ghostFactory = new GhostFactory((Plugin) this);
+			setListeners();
+			loadConfig();
+			if(config.AutoUpdateOnLoad) {
+				new Skyupdater(this, 58232, this.getFile(), true, true);
+			}
+			startMetrics();
 		}
-		startMetrics();
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	public void onDisable() {
@@ -46,70 +51,26 @@ public class GhostPlayer extends JavaPlugin {
 		}
 	}
 	
-	private final void loadConfig() {
-		try {
-			System.setOut(new PrintStream(System.out, true, "UTF-8"));
-			config = new GhostPlayerConfig(this);
-			config.init();
-			messages = new GhostPlayerMessages(this);
-			messages.init();
-		}
-		catch(Exception ex) {
-			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
-			getServer().getPluginManager().disablePlugin(this);
-        return;
-		}
+	private final void loadConfig() throws Exception {
+		System.setOut(new PrintStream(System.out, true, "UTF-8"));
+		config = new GhostPlayerConfig(this);
+		config.init();
+		messages = new GhostPlayerMessages(this);
+		messages.init();
 	}
 	
-	private final void startMetrics() {
-		try {
-		    Metrics metrics = new Metrics(this);
-		    Graph ghostsGraph = metrics.createGraph("Ghosts Graph");
-		    ghostsGraph.addPlotter(new Metrics.Plotter("Total ghosts") {
-		    	
-			    @Override
-			    public int getValue() {
-			        return totalGhosts;
-			    }
-			    
-		    });
-		    metrics.start();
-		}
-		catch (IOException ex) {
-			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
-		}
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	private final void update() {
-		try {
-			Updater updater = new Updater(this, 58232, this.getFile(), Updater.UpdateType.DEFAULT, true);
-			Updater.UpdateResult result = updater.getResult();
-	       	switch(result) {
-	       		case SUCCESS:
-		           	System.out.println("[Ghost Player] Update found: The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.");
-		           	Bukkit.getPluginManager().disablePlugin(this);
-	            	break;
-	            case NO_UPDATE:
-	            	System.out.println("[Ghost Player] No Update: The updater did not find an update, and nothing was downloaded.");
-	            	break;
-	           	case FAIL_DOWNLOAD:
-	            	System.out.println("[Ghost Player] Download Failed: The updater found an update, but was unable to download it.");
-	           		break;
-	           	case FAIL_DBO:
-	            	System.out.println("[Ghost Player] dev.bukkit.org Failed: For some reason, the updater was unable to contact DBO to download the file.");
-	            	break;
-	           	case FAIL_NOVERSION:
-	           		System.out.println("[Ghost Player] No version found: When running the version check, the file on DBO did not contain the a version in the format 'vVersion' such as 'v1.0'.");
-	           		break;
-	           	case UPDATE_AVAILABLE:
-	           		System.out.println("[Ghost Player] Update found: There was an update found but not be downloaded !");
-	           		break;
-	       	}
-		}	
-		catch (Exception ex) {
-			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
-		}
+	private final void startMetrics() throws IOException {
+		Metrics metrics = new Metrics(this);
+		Graph ghostsGraph = metrics.createGraph("Ghosts Graph");
+		ghostsGraph.addPlotter(new Metrics.Plotter("Total ghosts") {
+			
+			@Override
+			public int getValue() {
+				return totalGhosts;
+			}
+				
+		});
+		metrics.start();
 	}
 	
 	private final void setListeners() {
