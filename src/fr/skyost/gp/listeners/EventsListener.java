@@ -1,22 +1,25 @@
-package com.skyost.gp.listeners;
+package fr.skyost.gp.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.skyost.gp.GhostPlayer;
-import com.skyost.gp.tasks.TurnHuman;
+import fr.skyost.gp.GhostPlayer;
+import fr.skyost.gp.tasks.TurnHuman;
 
 public class EventsListener implements Listener {
 	
 	@EventHandler
-    private static final void onPlayerQuit(PlayerQuitEvent event) {
+    private final void onPlayerQuit(PlayerQuitEvent event) {
     	if(GhostPlayer.ghostFactory.isGhost(event.getPlayer())) {
     		GhostPlayer.ghostFactory.setGhost(event.getPlayer(), false);
     	}
@@ -26,9 +29,9 @@ public class EventsListener implements Listener {
     }
     
     @EventHandler
-    private static final void onPlayerDeath(PlayerDeathEvent event) {
+    private final void onPlayerDeath(PlayerDeathEvent event) {
     	Player entity = event.getEntity();
-    	if(GhostPlayer.config.HumanWorlds.contains(entity.getWorld().getName())) {
+    	if(!GhostPlayer.config.HumanWorlds.contains(entity.getWorld().getName())) {
 	    	if(GhostPlayer.ghostFactory.hasPlayer(entity)) {
 	    		GhostPlayer.ghostFactory.addPlayer(event.getEntity());
 	    	   	if(GhostPlayer.config.TurnIntoGhostOnDeath) {
@@ -42,9 +45,9 @@ public class EventsListener implements Listener {
     }
     
     @EventHandler
-    private static final void onPlayerInteract(PlayerInteractEvent event) {
+    private final void onPlayerInteract(PlayerInteractEvent event) {
     	Player player = event.getPlayer();
-    	if(GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
+    	if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
 	    	if(!GhostPlayer.config.GhostsCanInteract) {
 		    	if(GhostPlayer.ghostFactory.isGhost(player)) {
 		    		player.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_31);
@@ -54,10 +57,38 @@ public class EventsListener implements Listener {
     	}
     }
     
-	@EventHandler
-    private static final void onPlayerJoin(PlayerJoinEvent event) {
+    @EventHandler
+    private final void onPlayerDropItem(PlayerDropItemEvent event) {
     	Player player = event.getPlayer();
-    	if(GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
+    	if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
+	    	if(!GhostPlayer.config.GhostsCanInteract) {
+		    	if(GhostPlayer.ghostFactory.isGhost(player)) {
+		    		player.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_31);
+		    		event.setCancelled(true);
+		    	}
+	    	}
+    	}
+    }
+    
+    @EventHandler
+    private final void onEntityDamage(EntityDamageEvent event) {
+    	Entity entity = event.getEntity();
+	    if(entity instanceof Player) {
+	    	Player player = (Player)entity;
+	       	if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
+	    	   	if(!GhostPlayer.config.GhostsCanInteract) {
+	    	    	if(GhostPlayer.ghostFactory.isGhost(player)) {
+	    	    		event.setCancelled(true);
+	    		   	}
+	    	    }
+	        }
+    	}
+    }
+    
+	@EventHandler
+    private final void onPlayerJoin(PlayerJoinEvent event) {
+    	Player player = event.getPlayer();
+    	if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
     		if(GhostPlayer.config.TurnedIntoOnJoin.equalsIgnoreCase("SILENT HUMAN")) {
     			if(player.hasPermission("ghostplayer.player.behuman")) {
     				if(GhostPlayer.ghostFactory.isGhost(player)) {

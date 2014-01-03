@@ -1,4 +1,4 @@
-package com.skyost.gp.utils;
+package fr.skyost.gp.utils;
 
 import java.util.HashSet;
 import java.util.Iterator;

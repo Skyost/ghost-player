@@ -1,10 +1,10 @@
-package com.skyost.gp.tasks;
+package fr.skyost.gp.tasks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.skyost.gp.GhostPlayer;
+import fr.skyost.gp.GhostPlayer;
 
 public class TurnHuman extends BukkitRunnable { 	 
     private final String playername;

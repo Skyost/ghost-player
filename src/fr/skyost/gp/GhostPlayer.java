@@ -1,4 +1,4 @@
-package com.skyost.gp;
+package fr.skyost.gp;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -9,14 +9,14 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.skyost.gp.config.GhostPlayerConfig;
-import com.skyost.gp.config.GhostPlayerMessages;
-import com.skyost.gp.listeners.CommandsExecutor;
-import com.skyost.gp.listeners.EventsListener;
-import com.skyost.gp.utils.GhostFactory;
-import com.skyost.gp.utils.Metrics;
-import com.skyost.gp.utils.Skyupdater;
-import com.skyost.gp.utils.Metrics.Graph;
+import fr.skyost.gp.config.GhostPlayerConfig;
+import fr.skyost.gp.config.GhostPlayerMessages;
+import fr.skyost.gp.listeners.CommandsExecutor;
+import fr.skyost.gp.listeners.EventsListener;
+import fr.skyost.gp.utils.GhostFactory;
+import fr.skyost.gp.utils.Metrics;
+import fr.skyost.gp.utils.Skyupdater;
+import fr.skyost.gp.utils.Metrics.Graph;
 
 public class GhostPlayer extends JavaPlugin {
 	

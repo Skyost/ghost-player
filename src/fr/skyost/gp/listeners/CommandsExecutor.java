@@ -1,21 +1,23 @@
-package com.skyost.gp.listeners;
+package fr.skyost.gp.listeners;
 
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.skyost.gp.GhostPlayer;
-import com.skyost.gp.tasks.TurnHuman;
+
+import fr.skyost.gp.GhostPlayer;
+import fr.skyost.gp.tasks.TurnHuman;
 
 public class CommandsExecutor implements CommandExecutor {
 
-	@SuppressWarnings({ "deprecation" })
-	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args){
+	@SuppressWarnings("deprecation")
+	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         Player player = null;
  
         if(sender instanceof Player) {
@@ -145,6 +147,15 @@ public class CommandsExecutor implements CommandExecutor {
                      	if(!GhostPlayer.config.HumanWorlds.contains(worldName)) {
     	                   	GhostPlayer.config.HumanWorlds.add(worldName);
     						GhostPlayer.config.save();
+                     	}
+                     	World world = Bukkit.getWorld(worldName);
+                     	if(world != null) {
+                     		for(Player ghostPlayer : world.getPlayers()) {
+                     			if(GhostPlayer.ghostFactory.isGhost(ghostPlayer)) {
+                     				GhostPlayer.ghostFactory.setGhost(ghostPlayer, false);
+                        			GhostPlayer.ghostFactory.removePlayer(ghostPlayer);
+                     			}
+                     		}
                      	}
 						String message = GhostPlayer.messages.Message_13.replaceAll("/world/", worldName);
 						sender.sendMessage(message); // /world/ has been added to the list !

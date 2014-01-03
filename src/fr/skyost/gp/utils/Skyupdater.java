@@ -1,4 +1,4 @@
-package com.skyost.gp.utils;
+package fr.skyost.gp.utils;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -48,7 +48,7 @@ public class Skyupdater {
 	private String response;
 	private Thread updaterThread;
 	
-	private static final String SKYUPDATER_VERSION = "0.2.3";
+	private static final String SKYUPDATER_VERSION = "0.2.4";
 	
 	public enum Result {
 		
@@ -163,7 +163,7 @@ public class Skyupdater {
 			config.put("enable", "true");
 			config.put("api-key", "NONE");
 			final StringBuilder header = new StringBuilder();
-			header.append("Skyupdater configuration");
+			header.append("Skyupdater configuration - http://www.skyost.eu/Skyupdater.txt");
 			header.append(lineSeparator);
 			header.append(lineSeparator);
 			header.append("What is Skyupdater ?");

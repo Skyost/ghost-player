@@ -1,5 +1,5 @@
 name: Ghost Player
-main: com.skyost.gp.GhostPlayer
+main: fr.skyost.gp.GhostPlayer
 description: Be ghooooooooost !
 version: 1.4.5
 author: Skyost
