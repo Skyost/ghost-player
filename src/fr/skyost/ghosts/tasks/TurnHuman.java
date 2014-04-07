@@ -1,10 +1,10 @@
-package fr.skyost.gp.tasks;
+package fr.skyost.ghosts.tasks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import fr.skyost.gp.GhostPlayer;
+import fr.skyost.ghosts.GhostPlayer;
 
 public class TurnHuman extends BukkitRunnable { 	 
     private final String playername;
@@ -19,12 +19,12 @@ public class TurnHuman extends BukkitRunnable {
     	Player player = Bukkit.getPlayer(playername);
     	if(player != null && player.isOnline()) {
 	    	if(isSilent == true) {
-	    		GhostPlayer.ghostFactory.setGhost(player, false);
-	    		GhostPlayer.ghostFactory.removePlayer(player);
+	    		GhostPlayer.ghostManager.setGhost(player, false);
+	    		GhostPlayer.ghostManager.removePlayer(player);
 	    	}
 	    	else {
-	    		GhostPlayer.ghostFactory.setGhost(player, false);
-	    		GhostPlayer.ghostFactory.removePlayer(player);
+	    		GhostPlayer.ghostManager.setGhost(player, false);
+	    		GhostPlayer.ghostManager.removePlayer(player);
 	    		player.sendMessage(GhostPlayer.messages.Message_11); // You are an human now !
 	    	}
     	}

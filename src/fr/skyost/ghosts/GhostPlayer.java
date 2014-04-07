@@ -1,4 +1,4 @@
-package fr.skyost.gp;
+package fr.skyost.ghosts;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -6,28 +6,27 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import fr.skyost.gp.config.GhostPlayerConfig;
-import fr.skyost.gp.config.GhostPlayerMessages;
-import fr.skyost.gp.listeners.CommandsExecutor;
-import fr.skyost.gp.listeners.EventsListener;
-import fr.skyost.gp.utils.GhostFactory;
-import fr.skyost.gp.utils.Metrics;
-import fr.skyost.gp.utils.Skyupdater;
-import fr.skyost.gp.utils.Metrics.Graph;
+import fr.skyost.ghosts.config.GhostPlayerConfig;
+import fr.skyost.ghosts.config.GhostPlayerMessages;
+import fr.skyost.ghosts.listeners.CommandsExecutor;
+import fr.skyost.ghosts.listeners.EventsListener;
+import fr.skyost.ghosts.utils.GhostManager;
+import fr.skyost.ghosts.utils.Metrics;
+import fr.skyost.ghosts.utils.Skyupdater;
+import fr.skyost.ghosts.utils.Metrics.Graph;
 
 public class GhostPlayer extends JavaPlugin {
 	
-	public static GhostFactory ghostFactory;
+	public static GhostManager ghostManager;
 	public static GhostPlayerConfig config;
 	public static GhostPlayerMessages messages;
 	public static int totalGhosts;
 	
 	public void onEnable() {
 		try {
-			ghostFactory = new GhostFactory((Plugin) this);
+			ghostManager = new GhostManager(this);
 			setListeners();
 			loadConfig();
 			if(config.AutoUpdateOnLoad) {

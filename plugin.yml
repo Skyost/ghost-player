@@ -1,7 +1,7 @@
 name: Ghost Player
-main: fr.skyost.gp.GhostPlayer
+main: fr.skyost.ghosts.GhostPlayer
 description: Be ghooooooooost !
-version: 1.4.6
+version: 1.5
 author: Skyost
 website: http://www.skyost.eu
 commands:
@@ -12,7 +12,7 @@ commands:
   permission: ghostplayer.player.ghostview
  ghost:
   aliases: g
-  description: Turns you into a ghost and allow you to see ghosts.
+  description: Turns you into a ghost and Allows you to see ghosts.
   usage: Simply type /ghost or /g to turn you into ghost !
   permission: ghostplayer.player.beghost
  silentghost:
@@ -22,7 +22,7 @@ commands:
   permission: ghostplayer.player.beghost
  human:
   aliases: h
-  description: Turns you into a human and disallow you to see ghosts.
+  description: Turns you into a human and disAllows you to see ghosts.
   usage: Simply type /human or /h to turn you into human !
   permission: ghostplayer.player.behuman
  silenthuman:
@@ -94,28 +94,46 @@ permissions:
    ghostplayer.admin.setghostworld: true
  ghostplayer.player.ghostview:
   default: true
-  description: Allow you to view a block like a ghost !
+  description: Allows you to view a block like a ghost !
  ghostplayer.player.beghost:
   default: true
-  description: Allow you to be a ghost !
+  description: Allows you to be a ghost !
  ghostplayer.player.behuman:
   default: true
-  description: Allow you to be an human !
+  description: Allows you to be an human !
  ghostplayer.player.beghosthunter:
   default: true
-  description: Allow you to be a ghost hunter !
+  description: Allows you to be a ghost hunter !
  ghostplayer.admin.removeghost:
   default: op
-  description: Allow you to remove a player from the ghosts !
+  description: Allows you to remove a player from the ghosts !
  ghostplayer.admin.removeghosthunter:
   default: op
-  description: Allow you to remove a player from the ghosts hunters !
+  description: Allows you to remove a player from the ghosts hunters !
  ghostplayer.admin.clearsghosts:
   default: op
-  description: Allow you to clears all ghosts !
+  description: Allows you to clears all ghosts !
  ghostplayer.admin.sethumanworld:
   default: op
-  description: Allow you to add a world to the list where the plugin is disabled !
+  description: Allows you to add a world to the list where the plugin is disabled !
  ghostplayer.admin.setghostworld:
   default: op
-  description: Allow you to remove a world from the list of the worlds where the plugin is disabled !
+  description: Allows you to remove a world from the list of the worlds where the plugin is disabled !
+ ghostplayer.login.silenthuman:
+  default: false
+  description: Turns you into an human on join.
+ ghostplayer.login.human:
+  default: false
+  description: Turns you into an human on join.
+ ghostplayer.login.silentghost:
+  default: false
+  description: Turns you into a ghost on join.
+ ghostplayer.login.ghost:
+  default: false
+  description: Turns you into a ghost on join.
+ ghostplayer.login.silentghosthunter:
+  default: false
+  description: Turns you into a ghost hunter on join.
+ ghostplayer.login.ghosthunter:
+  default: false
+  description: Turns you into a ghost hunter on join.

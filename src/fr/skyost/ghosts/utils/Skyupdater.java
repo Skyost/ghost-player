@@ -1,4 +1,4 @@
-package fr.skyost.gp.utils;
+package fr.skyost.ghosts.utils;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

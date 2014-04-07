@@ -1,4 +1,4 @@
-package fr.skyost.gp.listeners;
+package fr.skyost.ghosts.listeners;
 
 import java.util.Arrays;
 
@@ -11,8 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.skyost.gp.GhostPlayer;
-import fr.skyost.gp.tasks.TurnHuman;
+import fr.skyost.ghosts.GhostPlayer;
+import fr.skyost.ghosts.tasks.TurnHuman;
 
 public class CommandsExecutor implements CommandExecutor {
 
@@ -31,7 +31,7 @@ public class CommandsExecutor implements CommandExecutor {
                     	sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
                     }
                     else {
-                    	if(GhostPlayer.ghostFactory.hasPlayer(player)) {
+                    	if(GhostPlayer.ghostManager.hasPlayer(player)) {
                     		player.sendBlockChange(player.getTargetBlock(null, 10).getLocation(), Material.AIR, (byte)0);
                     	}
                     	else {
@@ -67,7 +67,7 @@ public class CommandsExecutor implements CommandExecutor {
              		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
                 }
              	else {
-                 	if(GhostPlayer.ghostFactory.isGhost(player)) {
+                 	if(GhostPlayer.ghostManager.isGhost(player)) {
                    		if(sender instanceof Player) {
                    			sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_18); // You are already a ghost so you don't need to be a ghost hunter to see your friends !
                    		}
@@ -75,7 +75,7 @@ public class CommandsExecutor implements CommandExecutor {
                    			sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_27); // This player is already a ghost so he don't need to be a ghost hunter !
                    		}
                     }
-                    else if(GhostPlayer.ghostFactory.hasPlayer(player)) {
+                    else if(GhostPlayer.ghostManager.hasPlayer(player)) {
                     	if(sender instanceof Player) {
                     		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_19); // You are already a ghost hunter !
                     	}
@@ -84,7 +84,7 @@ public class CommandsExecutor implements CommandExecutor {
                     	}
                     }
                     else {
-                   		GhostPlayer.ghostFactory.addPlayer(player);
+                   		GhostPlayer.ghostManager.addPlayer(player);
                     	player.sendMessage(GhostPlayer.messages.Message_20); // You are a ghost hunter now !
                    	}
             	}
@@ -113,7 +113,7 @@ public class CommandsExecutor implements CommandExecutor {
         			sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
                 }
                 else {
-                    if(GhostPlayer.ghostFactory.isGhost(player)) {
+                    if(GhostPlayer.ghostManager.isGhost(player)) {
                     	if(sender instanceof Player) {
                        		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_18); // You are already a ghost so you don't need to be a ghost hunter to see your friends !
                        	}
@@ -121,7 +121,7 @@ public class CommandsExecutor implements CommandExecutor {
                        		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_27); // This player is already a ghost so he don't need to be a ghost hunter !
                        	}
                     }
-                    else if(GhostPlayer.ghostFactory.hasPlayer(player)) {
+                    else if(GhostPlayer.ghostManager.hasPlayer(player)) {
                         if(sender instanceof Player) {
                         	sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_19); // You are already a ghost hunter !
                         }
@@ -130,7 +130,7 @@ public class CommandsExecutor implements CommandExecutor {
                         }
                     }
                     else {
-                    	GhostPlayer.ghostFactory.addPlayer(player);
+                    	GhostPlayer.ghostManager.addPlayer(player);
                     }
                 }
         	}
@@ -151,9 +151,9 @@ public class CommandsExecutor implements CommandExecutor {
                      	World world = Bukkit.getWorld(worldName);
                      	if(world != null) {
                      		for(Player ghostPlayer : world.getPlayers()) {
-                     			if(GhostPlayer.ghostFactory.isGhost(ghostPlayer)) {
-                     				GhostPlayer.ghostFactory.setGhost(ghostPlayer, false);
-                        			GhostPlayer.ghostFactory.removePlayer(ghostPlayer);
+                     			if(GhostPlayer.ghostManager.isGhost(ghostPlayer)) {
+                     				GhostPlayer.ghostManager.setGhost(ghostPlayer, false);
+                        			GhostPlayer.ghostManager.removePlayer(ghostPlayer);
                      			}
                      		}
                      	}
@@ -217,7 +217,7 @@ public class CommandsExecutor implements CommandExecutor {
                    	sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
              	}
               	else {
-                	if(GhostPlayer.ghostFactory.isGhost(player)) {
+                	if(GhostPlayer.ghostManager.isGhost(player)) {
                     	if(sender instanceof Player) {
                     		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_2); // You are already a ghost !
                     	}
@@ -227,8 +227,8 @@ public class CommandsExecutor implements CommandExecutor {
                  	}
                     else {
                     	try {
-                    		GhostPlayer.ghostFactory.setGhost(player, true);
-                         	GhostPlayer.ghostFactory.addPlayer(player);
+                    		GhostPlayer.ghostManager.setGhost(player, true);
+                         	GhostPlayer.ghostManager.addPlayer(player);
                           	GhostPlayer.totalGhosts++;
                          	if(GhostPlayer.config.GhostTime != -1) {
                          		new TurnHuman(player.getName(), true).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.GhostTime);
@@ -271,7 +271,7 @@ public class CommandsExecutor implements CommandExecutor {
             		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
 	            }
 	            else {
-	            	if(GhostPlayer.ghostFactory.isGhost(player)) {
+	            	if(GhostPlayer.ghostManager.isGhost(player)) {
                     	if(sender instanceof Player) {
                     		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_2); // You are already a ghost !
                     	}
@@ -281,8 +281,8 @@ public class CommandsExecutor implements CommandExecutor {
                     }
                     else {
                     	try {
-                    		GhostPlayer.ghostFactory.setGhost(player, true);
-                    		GhostPlayer.ghostFactory.addPlayer(player);
+                    		GhostPlayer.ghostManager.setGhost(player, true);
+                    		GhostPlayer.ghostManager.addPlayer(player);
                     		player.sendMessage(GhostPlayer.messages.Message_3); // You are a ghost now !
                     		GhostPlayer.totalGhosts++;
                            	if(GhostPlayer.config.GhostTime != -1) {
@@ -316,10 +316,10 @@ public class CommandsExecutor implements CommandExecutor {
 	                    	sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
 	                    	return true;
 	        			}
-                    	if(GhostPlayer.ghostFactory.isGhost(player)) {
+                    	if(GhostPlayer.ghostManager.isGhost(player)) {
                     		String message1 = GhostPlayer.messages.Message_4.replaceAll("/target/", player.getName());
-                    		GhostPlayer.ghostFactory.setGhost(player, false);
-                    		GhostPlayer.ghostFactory.removePlayer(player);
+                    		GhostPlayer.ghostManager.setGhost(player, false);
+                    		GhostPlayer.ghostManager.removePlayer(player);
                     		sender.sendMessage(message1); // Has been removed from the ghosts !
                            	if(sender instanceof Player) {
                         		String message2 = GhostPlayer.messages.Message_5.replaceAll("/sender/", sender.getName());
@@ -357,14 +357,14 @@ public class CommandsExecutor implements CommandExecutor {
 	                    	sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
 	                    	return true;
 	                    }
-                       	if(GhostPlayer.ghostFactory.isGhost(player)) {
+                       	if(GhostPlayer.ghostManager.isGhost(player)) {
                        		String message = GhostPlayer.messages.Message_21.replaceAll("/target/", player.getName());
                        		sender.sendMessage(ChatColor.RED + message); // /target/ is not a ghost hunter !
                         }
                     	else {
-                    		if(GhostPlayer.ghostFactory.hasPlayer(player)) {
+                    		if(GhostPlayer.ghostManager.hasPlayer(player)) {
 	                    			String message1 = GhostPlayer.messages.Message_22.replaceAll("/target/", player.getName());
-	                        		GhostPlayer.ghostFactory.removePlayer(player);
+	                        		GhostPlayer.ghostManager.removePlayer(player);
                         			sender.sendMessage(message1); // /target/ has been removed from the ghosts hunters !
                         			if(sender instanceof Player) {
                         				String message2 = GhostPlayer.messages.Message_24.replaceAll("/sender/", sender.getName());
@@ -413,9 +413,9 @@ public class CommandsExecutor implements CommandExecutor {
                 	sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
                 }
                 else {
-                	if(GhostPlayer.ghostFactory.isGhost(player)) {
-            			GhostPlayer.ghostFactory.setGhost(player, false);
-            			GhostPlayer.ghostFactory.removePlayer(player);
+                	if(GhostPlayer.ghostManager.isGhost(player)) {
+            			GhostPlayer.ghostManager.setGhost(player, false);
+            			GhostPlayer.ghostManager.removePlayer(player);
                 	}
                 	else {
                 		if(sender instanceof Player) {
@@ -451,9 +451,9 @@ public class CommandsExecutor implements CommandExecutor {
             		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
                 }
                 else {
-                	if(GhostPlayer.ghostFactory.isGhost(player)) {
-                		GhostPlayer.ghostFactory.setGhost(player, false);
-                		GhostPlayer.ghostFactory.removePlayer(player);
+                	if(GhostPlayer.ghostManager.isGhost(player)) {
+                		GhostPlayer.ghostManager.setGhost(player, false);
+                		GhostPlayer.ghostManager.removePlayer(player);
                 		player.sendMessage(GhostPlayer.messages.Message_11); // You are an human now !
                     }
                     else {
@@ -478,7 +478,7 @@ public class CommandsExecutor implements CommandExecutor {
                 		sender.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_S3); // This plugin is disabled in this world !
                 	}
                 	else {
-                		GhostPlayer.ghostFactory.clearMembers();
+                		GhostPlayer.ghostManager.clearMembers();
                 		sender.sendMessage(GhostPlayer.messages.Message_10); // All ghosts have been cleared !
                 	}
         		}
@@ -487,7 +487,7 @@ public class CommandsExecutor implements CommandExecutor {
         		}
         	}
         	else {
-    			GhostPlayer.ghostFactory.clearMembers();
+    			GhostPlayer.ghostManager.clearMembers();
     			sender.sendMessage(GhostPlayer.messages.Message_10); // All ghosts have been cleared !
         	}
         }

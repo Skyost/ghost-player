@@ -1,10 +1,10 @@
-package fr.skyost.gp.config;
+package fr.skyost.ghosts.config;
 
 import java.io.File;
 
 import org.bukkit.plugin.Plugin;
 
-import fr.skyost.gp.utils.Config;
+import fr.skyost.ghosts.utils.Config;
 
 public class GhostPlayerMessages extends Config {
 	
@@ -33,7 +33,6 @@ public class GhostPlayerMessages extends Config {
 	public String Message_23 = "You have been removed from the ghosts hunters !";
 	public String Message_24 = "/sender/ has been removed you from the ghosts hunters !";
 	public String Message_25 = "Simply type /removeghosthunter <player> or /rgh <player> to remove <player> from the ghosts hunters !";
-	public String Message_26 = "Invalid data in config for 'TurnedIntoOnJoin'. It will be set to 'HUMAN'.";
 	public String Message_27 = "This player is already a ghost so he don't need to be a ghost hunter !";
 	public String Message_28 = "This player is already a ghost hunter !";
 	public String Message_29 = "This player is already a ghost !";

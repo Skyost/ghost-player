@@ -1,4 +1,4 @@
-package fr.skyost.gp.config;
+package fr.skyost.ghosts.config;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,14 +6,13 @@ import java.util.List;
 
 import org.bukkit.plugin.Plugin;
 
-import fr.skyost.gp.utils.Config;
+import fr.skyost.ghosts.utils.Config;
 
 public class GhostPlayerConfig extends Config {
 	
 	public boolean AutoUpdateOnLoad = true;
 	public boolean TurnIntoGhostOnDeath = false;
 	public boolean GhostsCanInteract = true;
-	public String TurnedIntoOnJoin = "SILENT HUMAN";
 	public List<String> HumanWorlds = new ArrayList<String>();
 	public Integer GhostTime = -1;
 	
