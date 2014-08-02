@@ -14,42 +14,44 @@ import fr.skyost.ghosts.listeners.CommandsExecutor;
 import fr.skyost.ghosts.listeners.EventsListener;
 import fr.skyost.ghosts.utils.GhostManager;
 import fr.skyost.ghosts.utils.Metrics;
-import fr.skyost.ghosts.utils.Skyupdater;
 import fr.skyost.ghosts.utils.Metrics.Graph;
+import fr.skyost.ghosts.utils.Skyupdater;
 
 public class GhostPlayer extends JavaPlugin {
-	
+
 	public static GhostManager ghostManager;
 	public static GhostPlayerConfig config;
 	public static GhostPlayerMessages messages;
 	public static int totalGhosts;
-	
+
+	@Override
 	public void onEnable() {
 		try {
 			ghostManager = new GhostManager(this);
-			setListeners();
+			setupListeners();
 			loadConfig();
 			if(config.AutoUpdateOnLoad) {
-				new Skyupdater(this, 58232, this.getFile(), true, true);
+				new Skyupdater(this, 58232, getFile(), true, true);
 			}
 			startMetrics();
 		}
-		catch(Exception ex) {
+		catch(final Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-	
+
+	@Override
 	public void onDisable() {
 		try {
 			config.save();
 			getServer().getPluginManager().disablePlugin(this);
-		} 
-		catch (InvalidConfigurationException ex) {
+		}
+		catch (final InvalidConfigurationException ex) {
 			getLogger().log(Level.SEVERE, "[Ghost Player] " + ex);
 			getServer().getPluginManager().disablePlugin(this);
 		}
 	}
-	
+
 	private final void loadConfig() throws Exception {
 		System.setOut(new PrintStream(System.out, true, "UTF-8"));
 		config = new GhostPlayerConfig(this);
@@ -57,36 +59,36 @@ public class GhostPlayer extends JavaPlugin {
 		messages = new GhostPlayerMessages(this);
 		messages.init();
 	}
-	
+
 	private final void startMetrics() throws IOException {
-		Metrics metrics = new Metrics(this);
-		Graph ghostsGraph = metrics.createGraph("Ghosts Graph");
+		final Metrics metrics = new Metrics(this);
+		final Graph ghostsGraph = metrics.createGraph("Ghosts Graph");
 		ghostsGraph.addPlotter(new Metrics.Plotter("Total ghosts") {
-			
+
 			@Override
 			public int getValue() {
 				return totalGhosts;
 			}
-				
+
 		});
 		metrics.start();
 	}
-	
-	private final void setListeners() {
+
+	private final void setupListeners() {
 		Bukkit.getPluginManager().registerEvents(new EventsListener(), this);
-		CommandsExecutor executor = new CommandsExecutor();
-		this.getCommand("ghostview").setExecutor(executor);
-		this.getCommand("ghost").setExecutor(executor);
-		this.getCommand("silentghost").setExecutor(executor);
-		this.getCommand("human").setExecutor(executor);
-		this.getCommand("silenthuman").setExecutor(executor);
-		this.getCommand("removeghost").setExecutor(executor);
-		this.getCommand("clearsghosts").setExecutor(executor);
-		this.getCommand("humanworld").setExecutor(executor);
-		this.getCommand("ghostworld").setExecutor(executor);
-		this.getCommand("ghosthunter").setExecutor(executor);
-		this.getCommand("silentghosthunter").setExecutor(executor);
-		this.getCommand("removeghosthunter").setExecutor(executor);
+		final CommandsExecutor executor = new CommandsExecutor();
+		getCommand("ghostview").setExecutor(executor);
+		getCommand("ghost").setExecutor(executor);
+		getCommand("silentghost").setExecutor(executor);
+		getCommand("human").setExecutor(executor);
+		getCommand("silenthuman").setExecutor(executor);
+		getCommand("removeghost").setExecutor(executor);
+		getCommand("clearsghosts").setExecutor(executor);
+		getCommand("humanworld").setExecutor(executor);
+		getCommand("ghostworld").setExecutor(executor);
+		getCommand("ghosthunter").setExecutor(executor);
+		getCommand("silentghosthunter").setExecutor(executor);
+		getCommand("removeghosthunter").setExecutor(executor);
 	}
-	
+
 }

@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 import fr.skyost.ghosts.utils.Config;
 
 public class GhostPlayerMessages extends Config {
-	
+
 	public String Message_1 = "An human can't do this !";
 	public String Message_2 = "You are already a ghost !";
 	public String Message_3 = "You are a ghost now !";
@@ -38,16 +38,16 @@ public class GhostPlayerMessages extends Config {
 	public String Message_29 = "This player is already a ghost !";
 	public String Message_30 = "This player is already an human !";
 	public String Message_31 = "Ghosts can't interact !";
-	
+
 	public String Message_S1 = "You don't have permission to do this !";
 	public String Message_S2 = "You can't do this from the console !";
 	public String Message_S3 = "This plugin is disabled in this world !";
 	public String Message_S4 = "This player is offline !";
 	public String Message_S5 = "You must have at least one argument !";
-	
-	public GhostPlayerMessages(Plugin plugin) {
+
+	public GhostPlayerMessages(final Plugin plugin) {
 		CONFIG_FILE = new File(plugin.getDataFolder(), "messages.yml");
 		CONFIG_HEADER = "Ghost Player Messages";
 	}
-	
+
 }
