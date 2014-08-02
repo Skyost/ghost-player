@@ -31,10 +31,10 @@ public class EventsListener implements Listener {
 	@EventHandler
 	private final void onPlayerDeath(final PlayerDeathEvent event) {
 		final Player entity = event.getEntity();
-		if(!GhostPlayer.config.HumanWorlds.contains(entity.getWorld().getName())) {
+		if(!GhostPlayer.config.humanWorlds.contains(entity.getWorld().getName())) {
 			if(GhostPlayer.ghostManager.hasPlayer(entity)) {
 				GhostPlayer.ghostManager.addPlayer(event.getEntity());
-				if(GhostPlayer.config.TurnIntoGhostOnDeath) {
+				if(GhostPlayer.config.ghostOnDeath) {
 					GhostPlayer.ghostManager.setGhost(event.getEntity(), true);
 				}
 				else {
@@ -47,10 +47,10 @@ public class EventsListener implements Listener {
 	@EventHandler
 	private final void onPlayerInteract(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
-		if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
-			if(!GhostPlayer.config.GhostsCanInteract) {
+		if(!GhostPlayer.config.humanWorlds.contains(player.getWorld().getName())) {
+			if(!GhostPlayer.config.ghostscanInteract) {
 				if(GhostPlayer.ghostManager.isGhost(player)) {
-					player.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_31);
+					player.sendMessage(ChatColor.RED + GhostPlayer.messages.message30);
 					event.setCancelled(true);
 				}
 			}
@@ -60,10 +60,10 @@ public class EventsListener implements Listener {
 	@EventHandler
 	private final void onPlayerDropItem(final PlayerDropItemEvent event) {
 		final Player player = event.getPlayer();
-		if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
-			if(!GhostPlayer.config.GhostsCanInteract) {
+		if(!GhostPlayer.config.humanWorlds.contains(player.getWorld().getName())) {
+			if(!GhostPlayer.config.ghostscanInteract) {
 				if(GhostPlayer.ghostManager.isGhost(player)) {
-					player.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_31);
+					player.sendMessage(ChatColor.RED + GhostPlayer.messages.message30);
 					event.setCancelled(true);
 				}
 			}
@@ -75,8 +75,8 @@ public class EventsListener implements Listener {
 		final Entity entity = event.getEntity();
 		if(entity instanceof Player) {
 			final Player player = (Player)entity;
-			if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
-				if(!GhostPlayer.config.GhostsCanInteract) {
+			if(!GhostPlayer.config.humanWorlds.contains(player.getWorld().getName())) {
+				if(!GhostPlayer.config.ghostscanInteract) {
 					if(GhostPlayer.ghostManager.isGhost(player)) {
 						event.setCancelled(true);
 					}
@@ -88,7 +88,7 @@ public class EventsListener implements Listener {
 	@EventHandler
 	private final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
-		if(!GhostPlayer.config.HumanWorlds.contains(player.getWorld().getName())) {
+		if(!GhostPlayer.config.humanWorlds.contains(player.getWorld().getName())) {
 			if(player.hasPermission("ghostplayer.login.silenthuman")) {
 				if(GhostPlayer.ghostManager.isGhost(player)) {
 					GhostPlayer.ghostManager.setGhost(player, false);
@@ -100,23 +100,23 @@ public class EventsListener implements Listener {
 					GhostPlayer.ghostManager.setGhost(player, false);
 					GhostPlayer.ghostManager.removePlayer(player);
 				}
-				player.sendMessage(GhostPlayer.messages.Message_11); // You are an human now !
+				player.sendMessage(GhostPlayer.messages.message11); // You are an human now !
 			}
 			else if(player.hasPermission("ghostplayer.login.silentghost")) {
 				if(!GhostPlayer.ghostManager.isGhost(player)) {
-					if(!(GhostPlayer.config.GhostTime.equals(-1))) {
+					if(!(GhostPlayer.config.ghostTime.equals(-1))) {
 						try {
 							GhostPlayer.ghostManager.setGhost(player, true);
 							GhostPlayer.ghostManager.addPlayer(player);
 							GhostPlayer.totalGhosts++;
-							if(GhostPlayer.config.GhostTime != -1) {
-								new TurnHuman(player.getName(), true).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.GhostTime);
+							if(GhostPlayer.config.ghostTime != -1) {
+								new TurnHuman(player.getName(), true).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.ghostTime);
 							}
 						}
 						catch(final Exception e) {
 							try {
-								player.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_17); // Invalid number in config for 'GhostTime'. It will be set to 'FOREVER'.
-								GhostPlayer.config.GhostTime = -1;
+								player.sendMessage(ChatColor.RED + GhostPlayer.messages.message17); // Invalid number in config for 'GhostTime'. It will be set to 'FOREVER'.
+								GhostPlayer.config.ghostTime = -1;
 								GhostPlayer.config.save();
 							}
 							catch(final Exception ex) {
@@ -131,16 +131,16 @@ public class EventsListener implements Listener {
 					try {
 						GhostPlayer.ghostManager.setGhost(player, true);
 						GhostPlayer.ghostManager.addPlayer(player);
-						player.sendMessage(GhostPlayer.messages.Message_3); // You are a ghost now !
+						player.sendMessage(GhostPlayer.messages.message3); // You are a ghost now !
 						GhostPlayer.totalGhosts++;
-						if(GhostPlayer.config.GhostTime != -1) {
-							new TurnHuman(player.getName(), false).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.GhostTime);
+						if(GhostPlayer.config.ghostTime != -1) {
+							new TurnHuman(player.getName(), false).runTaskLaterAsynchronously(Bukkit.getPluginManager().getPlugin("Ghost Player"), GhostPlayer.config.ghostTime);
 						}
 					}
 					catch(final Exception e) {
 						try {
-							player.sendMessage(ChatColor.RED + GhostPlayer.messages.Message_17); // Invalid number in config for 'GhostTime'. It will be set to 'FOREVER'.
-							GhostPlayer.config.GhostTime = -1;
+							player.sendMessage(ChatColor.RED + GhostPlayer.messages.message17); // Invalid number in config for 'GhostTime'. It will be set to 'FOREVER'.
+							GhostPlayer.config.ghostTime = -1;
 							GhostPlayer.config.save();
 						}
 						catch(final Exception ex) {
@@ -157,7 +157,7 @@ public class EventsListener implements Listener {
 			else if(player.hasPermission("ghostplayer.login.ghosthunter")) {
 				if(!GhostPlayer.ghostManager.isGhost(player) || !GhostPlayer.ghostManager.hasPlayer(player)) {
 					GhostPlayer.ghostManager.addPlayer(player);
-					player.sendMessage(GhostPlayer.messages.Message_20); // You are a ghost hunter now !
+					player.sendMessage(GhostPlayer.messages.message20); // You are a ghost hunter now !
 				}
 			}
 		}

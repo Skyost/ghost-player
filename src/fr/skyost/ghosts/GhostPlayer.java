@@ -1,7 +1,7 @@
 package fr.skyost.ghosts;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -30,7 +30,7 @@ public class GhostPlayer extends JavaPlugin {
 			ghostManager = new GhostManager(this);
 			setupListeners();
 			loadConfig();
-			if(config.AutoUpdateOnLoad) {
+			if(config.enableUpdater) {
 				new Skyupdater(this, 58232, getFile(), true, true);
 			}
 			startMetrics();
@@ -53,11 +53,11 @@ public class GhostPlayer extends JavaPlugin {
 	}
 
 	private final void loadConfig() throws Exception {
-		System.setOut(new PrintStream(System.out, true, "UTF-8"));
-		config = new GhostPlayerConfig(this);
-		config.init();
-		messages = new GhostPlayerMessages(this);
-		messages.init();
+		final File dataFolder = this.getDataFolder();
+		config = new GhostPlayerConfig(dataFolder);
+		config.load();
+		messages = new GhostPlayerMessages(dataFolder);
+		messages.load();
 	}
 
 	private final void startMetrics() throws IOException {

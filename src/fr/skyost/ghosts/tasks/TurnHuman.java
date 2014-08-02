@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.skyost.ghosts.GhostPlayer;
 
 public class TurnHuman extends BukkitRunnable {
+	
 	private final String playername;
 	private final Boolean isSilent;
 
@@ -26,7 +27,7 @@ public class TurnHuman extends BukkitRunnable {
 			else {
 				GhostPlayer.ghostManager.setGhost(player, false);
 				GhostPlayer.ghostManager.removePlayer(player);
-				player.sendMessage(GhostPlayer.messages.Message_11); // You are an human now !
+				player.sendMessage(GhostPlayer.messages.message11); // You are an human now !
 			}
 		}
 	}
